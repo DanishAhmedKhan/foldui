@@ -1,0 +1,33 @@
+{
+    "name": "web-blocks",
+    "version": "0.0.1",
+    "type": "module",
+    "description": "Schema-driven engine for building web UI blocks",
+    "main": "./dist/rectflow.cjs.js",
+    "module": "./dist/rectflow.es.js",
+    "unpkg": "./dist/rectflow.umd.js",
+    "jsdelivr": "./dist/rectflow.umd.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build && tsc",
+        "preview": "vite preview"
+    },
+    "keywords": [
+        "ui",
+        "website",
+        "builder",
+        "layout",
+        "ui-engine",
+        "ui-renderer"
+    ],
+    "author": "Danish Ahmed Khan",
+    "license": "MIT",
+    "devDependencies": {
+        "typescript": "~5.9.3",
+        "vite": "^7.2.4"
+    }
+}
