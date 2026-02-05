@@ -1,9 +1,9 @@
-# web-blocks
+# foldui
 
-A schema-driven engine for building web UI blocks.
+A schema-driven engine for building web UI.
 
-`web-blocks` converts structured JSON into HTML.  
-It is framework-agnostic and designed to power menus, layouts, quizzes, and full websites.
+`foldui` converts structured JSON into HTML.  
+It is framework-agnostic and designed to power menus, layouts, quizzes, froms and full websites.
 
 ## Status
 
@@ -12,7 +12,7 @@ It is framework-agnostic and designed to power menus, layouts, quizzes, and full
 ## Example
 
 ```ts
-import { render } from 'web-blocks';
+import { render } from 'foldui';
 
 const html = render({
   /* schema */

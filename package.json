@@ -2,7 +2,7 @@
     "name": "foldui",
     "version": "0.0.1",
     "type": "module",
-    "description": "Schema-driven engine for building web UI blocks",
+    "description": "Schema-driven engine for building web UI",
     "main": "./dist/foldui.cjs.js",
     "module": "./dist/foldui.es.js",
     "unpkg": "./dist/foldui.umd.js",
