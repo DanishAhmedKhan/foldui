@@ -4,8 +4,8 @@ export default defineConfig({
     build: {
         lib: {
             entry: 'src/index.ts',
-            name: 'WebBlocks',
-            fileName: 'web-blocks',
+            name: 'FoldUI',
+            fileName: 'foldui',
         },
     },
 })

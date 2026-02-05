@@ -1,12 +1,12 @@
 {
-    "name": "web-blocks",
+    "name": "foldui",
     "version": "0.0.1",
     "type": "module",
     "description": "Schema-driven engine for building web UI blocks",
-    "main": "./dist/rectflow.cjs.js",
-    "module": "./dist/rectflow.es.js",
-    "unpkg": "./dist/rectflow.umd.js",
-    "jsdelivr": "./dist/rectflow.umd.js",
+    "main": "./dist/foldui.cjs.js",
+    "module": "./dist/foldui.es.js",
+    "unpkg": "./dist/foldui.umd.js",
+    "jsdelivr": "./dist/foldui.umd.js",
     "types": "./dist/index.d.ts",
     "files": [
         "dist"
