@@ -6,7 +6,7 @@ export class ListRenderer extends BaseRenderer<ListNode> {
     public render(node: ListNode, ctx: RenderContext): HTMLElement {
         const tag = node.props?.tag ?? 'ul'
         const listEl = document.createElement(tag)
-        listEl.classList.add('wb-list')
+        listEl.classList.add('fui-list')
 
         switch (node.props?.variant) {
             case 'horizontal':

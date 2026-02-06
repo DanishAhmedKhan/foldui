@@ -4,7 +4,7 @@ import type { RenderContext } from './RenderContext'
 export class ContainerRenderer extends BaseRenderer<ContainerNode> {
     public render(node: ContainerNode, ctx: RenderContext): HTMLElement {
         const el = document.createElement('div')
-        el.classList.add('wb-container')
+        el.classList.add('fui-container')
 
         const layout = node.props?.layout
         if (!layout) return el

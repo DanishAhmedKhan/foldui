@@ -6,6 +6,7 @@ import { ListRenderer } from '../renderer/ListRenderer'
 import { MasterRenderer } from '../renderer/MasterRenderer'
 import { RendererRegistry } from '../renderer/RendererRegistry'
 import { TextRenderer } from '../renderer/TextRenderer'
+import { StyleEngine } from '../style/StyleEngine'
 import type { NodeType } from '../types/nodes'
 
 export type FoldUISchema = unknown
@@ -25,8 +26,20 @@ export class FoldUI {
     }
 
     public static render(containerEl: HTMLElement, schema: FoldUISchema) {
-        const html = FoldUI.getHtml(schema)
-        containerEl.innerHTML = html
+        const renderer = FoldUI.createRenderer()
+
+        const styleEngine = new StyleEngine()
+        const css = styleEngine.generate(schema)
+
+        const styleTag = document.createElement('style')
+        styleTag.innerHTML = css
+
+        containerEl.innerHTML = ''
+        containerEl.appendChild(styleTag)
+        containerEl.appendChild(renderer.renderToDom(schema))
+
+        // const html = FoldUI.getHtml(schema)
+        // containerEl.innerHTML = html
     }
 
     public static getHtml(schema: FoldUISchema): string {

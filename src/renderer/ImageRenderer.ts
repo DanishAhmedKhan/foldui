@@ -7,6 +7,7 @@ export class ImageRenderer extends BaseRenderer<ImageNode> {
         const img = document.createElement('img')
         img.src = node.props.src
         img.alt = node.props.alt ?? ''
+        img.classList.add('fui-image')
 
         return img
     }

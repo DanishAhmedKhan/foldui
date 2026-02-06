@@ -5,6 +5,7 @@ export class TextRenderer extends BaseRenderer<TextNode> {
     public render(node: TextNode) {
         const el = document.createElement(node.props.tag ?? 'span')
         el.textContent = node.props.content
+        el.classList.add('fui-text')
         return el
     }
 }

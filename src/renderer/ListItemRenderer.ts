@@ -5,10 +5,9 @@ import type { RenderContext } from './RenderContext'
 export class ListItemRenderer extends BaseRenderer<ListItemNode> {
     public render(node: ListItemNode, ctx: RenderContext): HTMLElement {
         const li = document.createElement('li')
-        li.classList.add('wb-list-item')
+        li.classList.add('fui-list-item')
 
         let content: HTMLElement | DocumentFragment
-        // Render children inside the list item
         if (node.children?.length) {
             content = document.createDocumentFragment()
             for (const child of node.children) {
@@ -18,7 +17,6 @@ export class ListItemRenderer extends BaseRenderer<ListItemNode> {
             content = document.createTextNode('')
         }
 
-        // Wrap with <a> if href is provided
         if (node.props?.href) {
             const a = document.createElement('a')
             a.href = node.props.href

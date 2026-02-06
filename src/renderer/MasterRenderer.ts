@@ -21,4 +21,8 @@ export class MasterRenderer implements RenderContext {
 
         return output.outerHTML
     }
+
+    public renderToDom(schema: NodeType): HTMLElement | DocumentFragment {
+        return this.renderNode(schema)
+    }
 }
