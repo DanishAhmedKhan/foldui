@@ -1,17 +1,24 @@
 import type { NodeType } from '../types/nodes'
+import type { RenderContext } from './RenderContext'
 import type { RendererRegistry } from './RendererRegistry'
 
-export class MasterRenderer {
+export class MasterRenderer implements RenderContext {
     constructor(private registry: RendererRegistry) {}
 
-    public render(node: NodeType): HTMLElement | DocumentFragment {
-        return this.renderNode(node)
+    public renderNode(node: NodeType): HTMLElement | DocumentFragment {
+        const renderer = this.registry.get(node.type)
+        return renderer.render(node as any, this)
     }
 
-    private renderNode = (node: NodeType) => {
-        const renderer = this.registry.get(node.type)
-        return renderer.render(node as any, {
-            renderNode: this.renderNode,
-        })
+    public renderToString(schema: NodeType): string {
+        const output = this.renderNode(schema)
+
+        if (output instanceof DocumentFragment) {
+            const wrapper = document.createElement('div')
+            wrapper.appendChild(output)
+            return wrapper.innerHTML
+        }
+
+        return output.outerHTML
     }
 }

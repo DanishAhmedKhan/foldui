@@ -4,7 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebBlocks</title>
+    <title>FoldUI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -17,8 +26,122 @@
 
         const containerEl = document.getElementById('container')
 
-        const schema = {
+        export const schema = {
+            type: 'container',
+            props: {
+                layout: {
+                    type: 'flex',
+                    direction: 'column',
+                    gap: 16
+                }
+            },
+            children: [
+
+                // ─── HEADER ──────────────────────────────
+
+                {
+                    type: 'container',
+                    props: {
+                        layout: {
+                            type: 'flex',
+                            justify: 'space-between',
+                            align: 'center'
+                        }
+                    },
+                    children: [
+                        {
+                            type: 'image',
+                            props: {
+                                src: 'https://ww1.oswego.edu/sites/default/files/styles/4x3_medium/public/2025-01/IMG_0588.jpg?h=71976bb4&itok=XkB2ksAk',
+                                alt: 'FoldUI'
+                            }
+                        },
+                        {
+                            type: 'list',
+                            props: {
+                                variant: 'horizontal'
+                            },
+                            children: [
+                                {
+                                    type: 'list-item',
+                                    props: { href: '/' },
+                                    children: [{
+                                        type: 'text',
+                                        props: {
+                                            tag: 'p',
+                                            content: 'Home'
+                                        }
+                                    }]
+                                },
+                                {
+                                    type: 'list-item',
+                                    props: { href: '/docs' },
+                                    children: [{
+                                        type: 'text', props: {
+                                            tag: 'p',
+                                            content: 'Docs'
+                                        }
+                                    }]
+                                },
+                                {
+                                    type: 'list-item',
+                                    props: { href: '/about' },
+                                    children: [{
+                                        type: 'text', props: {
+                                            tag: 'p',
+                                            content: 'About'
+                                        }
+                                    }]
+                                }
+                            ]
+                        }
+                    ]
+                },
+
+                // ─── HERO CONTENT ─────────────────────────
+
+                {
+                    type: 'container',
+                    props: {
+                        layout: {
+                            type: 'flex',
+                            direction: 'column',
+                            align: 'center',
+                            gap: 8
+                        }
+                    },
+                    children: [
+                        {
+                            type: 'text',
+                            props: {
+                                tag: 'h1',
+                                content: 'Build UI by folding blocks, not writing markup.'
+                            }
+                        },
+                        {
+                            type: 'fragment',
+                            children: [
+                                {
+                                    type: 'text',
+                                    props: {
+                                        tag: 'p',
+                                        content: 'FoldUI is'
+                                    }
+                                },
+                                {
+                                    type: 'text',
+                                    props: {
+                                        tag: 'p',
+                                        content: 'simple, composable, and fast.'
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
+
 
         FoldUI.render(containerEl, schema)
 
