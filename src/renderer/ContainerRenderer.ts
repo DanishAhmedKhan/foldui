@@ -1,8 +1,8 @@
 import { BaseRenderer } from './BaseRenderer'
 import type { ContainerNode, FlexLayout, GridLayout } from '../types/nodes'
-import type { RenderContext } from './RenderContext'
+
 export class ContainerRenderer extends BaseRenderer<ContainerNode> {
-    public render(node: ContainerNode, ctx: RenderContext): HTMLElement {
+    protected createElement(node: ContainerNode): HTMLElement {
         const el = document.createElement('div')
         el.classList.add('fui-container')
 
@@ -15,12 +15,6 @@ export class ContainerRenderer extends BaseRenderer<ContainerNode> {
 
         if (layout.type === 'grid') {
             this.applyGridLayout(el, layout)
-        }
-
-        if (node.children?.length) {
-            for (const child of node.children) {
-                el.appendChild(ctx.renderNode(child))
-            }
         }
 
         return el
@@ -49,18 +43,15 @@ export class ContainerRenderer extends BaseRenderer<ContainerNode> {
     private applyGridLayout(el: HTMLElement, layout: GridLayout) {
         el.style.display = 'grid'
 
-        if (typeof layout.columns === 'number') {
-            el.style.gridTemplateColumns = `repeat(${layout.columns}, 1fr)`
-        } else {
-            el.style.gridTemplateColumns = layout.columns
-        }
+        el.style.gridTemplateColumns =
+            typeof layout.columns === 'number' ? `repeat(${layout.columns}, 1fr)` : layout.columns
 
         if (layout.gap !== undefined) {
             el.style.gap = `${layout.gap}px`
         }
     }
 
-    private mapAlign(value: FlexLayout['align']) {
+    private mapAlign(value: NonNullable<FlexLayout['align']>): string {
         switch (value) {
             case 'start':
                 return 'flex-start'
@@ -70,12 +61,10 @@ export class ContainerRenderer extends BaseRenderer<ContainerNode> {
                 return 'center'
             case 'stretch':
                 return 'stretch'
-            default:
-                return 'stretch'
         }
     }
 
-    private mapJustify(value: FlexLayout['justify']) {
+    private mapJustify(value: NonNullable<FlexLayout['justify']>): string {
         switch (value) {
             case 'start':
                 return 'flex-start'
@@ -85,8 +74,6 @@ export class ContainerRenderer extends BaseRenderer<ContainerNode> {
                 return 'center'
             case 'space-between':
                 return 'space-between'
-            default:
-                return 'flex-start'
         }
     }
 }

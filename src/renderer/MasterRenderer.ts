@@ -7,22 +7,17 @@ export class MasterRenderer implements RenderContext {
 
     public renderNode(node: NodeType): HTMLElement | DocumentFragment {
         const renderer = this.registry.get(node.type)
-        return renderer.render(node as any, this)
+        return renderer.render(node, {
+            renderNode: this.renderNode.bind(this),
+        })
     }
 
-    public renderToString(schema: NodeType): string {
-        const output = this.renderNode(schema)
-
-        if (output instanceof DocumentFragment) {
-            const wrapper = document.createElement('div')
-            wrapper.appendChild(output)
-            return wrapper.innerHTML
-        }
-
-        return output.outerHTML
+    public renderToDom(node: NodeType): HTMLElement | DocumentFragment {
+        return this.renderNode(node)
     }
 
-    public renderToDom(schema: NodeType): HTMLElement | DocumentFragment {
-        return this.renderNode(schema)
+    public renderToString(node: NodeType): string {
+        const el = this.renderNode(node)
+        return el instanceof HTMLElement ? el.outerHTML : ''
     }
 }

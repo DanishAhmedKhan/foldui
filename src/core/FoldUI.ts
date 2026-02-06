@@ -33,12 +33,10 @@ export class FoldUI {
     }
 
     private static prepare(schema: FoldUISchema): NodeType {
-        console.log(schema)
         validateSchema(schema)
 
         const normalizer = new NodeNormalizer()
         const normalizedRoot = normalizer.normalize(schema.root)
-        console.log(normalizedRoot)
 
         return normalizedRoot
     }
