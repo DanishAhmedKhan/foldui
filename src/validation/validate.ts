@@ -1,13 +1,13 @@
 import Ajv from 'ajv'
 import schema from '../schema/content.schema.json'
+import type { FoldUIDocument } from '../core/FoldUI'
 
 const ajv = new Ajv()
-const validateFn = ajv.compile(schema)
+const validate = ajv.compile(schema)
 
-export function validateSchema(data: unknown): boolean {
-    const valid = validateFn(data)
+export function validateSchema(schema: unknown): asserts schema is FoldUIDocument {
+    const valid = validate(schema)
     if (!valid) {
-        console.error(validateFn.errors)
+        console.error(validate.errors)
     }
-    return valid
 }

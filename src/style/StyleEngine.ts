@@ -22,7 +22,6 @@ export class StyleEngine {
         }
     }
 
-    // ─── Base styles ─────────────────────────────
     private handleBaseStyle(node: BaseNode) {
         if (!node.style) return
 
@@ -30,7 +29,6 @@ export class StyleEngine {
         this.css.push(`${selector} { ${this.styleToCss(node.style)} }`)
     }
 
-    // ─── State styles (:hover, :active, etc.) ────
     private handleStateStyles(node: BaseNode) {
         if (!node.states) return
 
@@ -40,7 +38,6 @@ export class StyleEngine {
         }
     }
 
-    // ─── Responsive styles (@media) ──────────────
     private handleResponsiveStyles(node: BaseNode) {
         if (!node.responsive) return
 
@@ -58,7 +55,6 @@ export class StyleEngine {
         }
     }
 
-    // ─── Helpers ─────────────────────────────────
     private selector(id: string) {
         return `[data-foldui-id="${id}"]`
     }

@@ -147,7 +147,29 @@
         }
 
 
-        FoldUI.render(containerEl, schema)
+        const schema2 = {
+            type: 'container',
+            props: {
+                layout: {
+                    type: 'flex',
+                    direction: 'column',
+                    gap: 16
+                }
+            },
+            children: [
+                {
+                    type: 'text', props: {
+                        tag: 'p',
+                        content: 'About'
+                    }
+                }
+            ]
+        }
+
+        FoldUI.render(containerEl, {
+            version: '1',
+            root: schema
+        })
 
     </script>
 

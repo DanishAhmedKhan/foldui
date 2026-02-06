@@ -1,3 +1,4 @@
+import { NodeNormalizer } from '../node/NodeNormalizer'
 import { ContainerRenderer } from '../renderer/ContainerRenderer'
 import { FragmentRenderer } from '../renderer/FragmentRenderer'
 import { ImageRenderer } from '../renderer/ImageRenderer'
@@ -8,8 +9,14 @@ import { RendererRegistry } from '../renderer/RendererRegistry'
 import { TextRenderer } from '../renderer/TextRenderer'
 import { StyleEngine } from '../style/StyleEngine'
 import type { NodeType } from '../types/nodes'
+import { validateSchema } from '../validation/validate'
 
 export type FoldUISchema = unknown
+
+export interface FoldUIDocument {
+    version: string
+    root: NodeType
+}
 
 export class FoldUI {
     private static createRenderer(): MasterRenderer {
@@ -25,25 +32,36 @@ export class FoldUI {
         return new MasterRenderer(registry)
     }
 
+    private static prepare(schema: FoldUISchema): NodeType {
+        console.log(schema)
+        validateSchema(schema)
+
+        const normalizer = new NodeNormalizer()
+        const normalizedRoot = normalizer.normalize(schema.root)
+        console.log(normalizedRoot)
+
+        return normalizedRoot
+    }
+
     public static render(containerEl: HTMLElement, schema: FoldUISchema) {
+        const rootNode = FoldUI.prepare(schema)
         const renderer = FoldUI.createRenderer()
 
         const styleEngine = new StyleEngine()
-        const css = styleEngine.generate(schema)
+        const css = styleEngine.generate(rootNode)
 
         const styleTag = document.createElement('style')
-        styleTag.innerHTML = css
+        styleTag.textContent = css
 
         containerEl.innerHTML = ''
         containerEl.appendChild(styleTag)
-        containerEl.appendChild(renderer.renderToDom(schema))
-
-        // const html = FoldUI.getHtml(schema)
-        // containerEl.innerHTML = html
+        containerEl.appendChild(renderer.renderToDom(rootNode))
     }
 
     public static getHtml(schema: FoldUISchema): string {
+        const rootNode = FoldUI.prepare(schema)
         const renderer = FoldUI.createRenderer()
-        return renderer.renderToString(schema as NodeType)
+
+        return renderer.renderToString(rootNode)
     }
 }
