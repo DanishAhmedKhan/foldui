@@ -25,6 +25,14 @@
         "ui-renderer"
     ],
     "author": "Danish Ahmed Khan",
+    "homepage": "https://github.com/DanishAhmedKhan/foldui",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DanishAhmedKhan/foldui"
+    },
+    "bugs": {
+        "url": "https://github.com/DanishAhmedKhan/rectflow/foldui"
+    },
     "license": "MIT",
     "devDependencies": {
         "typescript": "~5.9.3",

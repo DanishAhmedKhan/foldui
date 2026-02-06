@@ -9,6 +9,21 @@
 
 <body>
 
+    <div id="container"></div>
+
+    <script type="module">
+
+        import { FoldUI } from './src/index'
+
+        const containerEl = document.getElementById('container')
+
+        const schema = {
+        }
+
+        FoldUI.render(containerEl, schema)
+
+    </script>
+
 </body>
 
 </html>
