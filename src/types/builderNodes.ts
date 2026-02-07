@@ -28,7 +28,7 @@ export type BuilderNode =
     | (ListItemNode & BuilderBaseNode)
     | (CustomNode & BuilderBaseNode)
 
-export interface BuilderDocument {
+export interface BuilderDocumentSchema {
     rootId: string
     nodes: Record<string, BuilderNode>
 }
