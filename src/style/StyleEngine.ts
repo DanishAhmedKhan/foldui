@@ -1,3 +1,4 @@
+import { computeContainerStyles } from './computed/containerStyles'
 import type { BaseNode, NodeType } from '../types/nodes'
 import { DEFAULT_STYLES } from '../default/defaultStyles'
 
@@ -22,20 +23,32 @@ export class StyleEngine {
             }
         }
     }
-
-    private handleBaseStyle(node: BaseNode & { type: NodeType['type'] }) {
+    private handleBaseStyle(node: NodeType) {
         const defaultStyle = DEFAULT_STYLES[node.type]
+        const computedStyle = this.computeStyle(node)
         const userStyle = node.style
 
-        if (!defaultStyle && !userStyle) return
+        if (!defaultStyle && !userStyle && !Object.keys(computedStyle).length) {
+            return
+        }
 
         const merged = {
             ...(defaultStyle ?? {}),
+            ...computedStyle,
             ...(userStyle ?? {}),
         }
 
         const selector = this.selector(node.id!)
         this.css.push(`${selector} { ${this.styleToCss(merged)} }`)
+    }
+
+    private computeStyle(node: NodeType): Record<string, any> {
+        switch (node.type) {
+            case 'container':
+                return computeContainerStyles(node)
+            default:
+                return {}
+        }
     }
 
     private handleStateStyles(node: BaseNode) {

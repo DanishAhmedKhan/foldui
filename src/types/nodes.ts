@@ -20,9 +20,12 @@ export interface SectionNode extends BaseNode {
 export interface ContainerNode extends BaseNode {
     type: 'container'
     props?: {
-        layout: FlexLayout | GridLayout
+        layout: ContainerLayout
+        size: ContainerSize
     }
 }
+
+export type ContainerLayout = FlexLayout | GridLayout
 
 export interface FlexLayout {
     type: 'flex'
@@ -36,6 +39,12 @@ export interface GridLayout {
     type: 'grid'
     columns: number | string
     gap?: number
+}
+
+export interface ContainerSize {
+    width?: 'full' | 'content'
+    maxWidth?: number | string
+    center?: boolean
 }
 
 export interface TextNode extends BaseNode {
