@@ -49,90 +49,74 @@ export class FoldUIDocument {
         }
     }
 
-    add(type: NodeType['type'], props?: any) {
-        const node = this.createNode(type, props)
+    private attach(node: BuilderNode, parentId: string, index?: number) {
+        const parent = this.schema.nodes[parentId]
+        if (!parent) throw new Error('Parent not found')
 
+        if (!this.canAcceptChild(parent.type, node.type)) {
+            throw new Error(`${parent.type} cannot contain ${node.type}`)
+        }
+
+        node.parent = parentId
+        this.schema.nodes[node.id] = node
+
+        if (index === undefined) {
+            parent.children.push(node.id)
+        } else {
+            parent.children.splice(index, 0, node.id)
+        }
+    }
+
+    remove(nodeId: string) {
+        if (nodeId === this.schema.rootId) return
+
+        const node = this.schema.nodes[nodeId]
+        if (!node) return
+
+        // remove children first
+        node.children.forEach((childId) => this.remove(childId))
+
+        // detach from parent
+        const parent = node.parent ? this.schema.nodes[node.parent] : null
+
+        if (parent) {
+            parent.children = parent.children.filter((id) => id !== nodeId)
+        }
+
+        delete this.schema.nodes[nodeId]
+    }
+
+    move(nodeId: string) {
         return {
-            into: (parentId: string, index?: number) => {
-                this.attach(node, parentId, index)
-                return node.id
+            into: (newParentId: string, index?: number) => {
+                this.detach(nodeId)
+                const node = this.schema.nodes[nodeId]
+                this.attach(node, newParentId, index)
             },
         }
     }
 
-    remove(nodeId: string) {
-        if (nodeId === this.schema.rootId) return
-
+    private detach(nodeId: string) {
         const node = this.schema.nodes[nodeId]
-        if (!node) return
+        if (!node || !node.parent) return
 
-        // remove children first
-        node.children.forEach((childId) => this.remove(childId))
+        const parent = this.schema.nodes[node.parent]
+        parent.children = parent.children.filter((id) => id !== nodeId)
 
-        // detach from parent
-        const parent = node.parent ? this.schema.nodes[node.parent] : null
-
-        if (parent) {
-            parent.children = parent.children.filter((id) => id !== nodeId)
-        }
-
-        delete this.schema.nodes[nodeId]
+        node.parent = null
     }
 
-    remove(nodeId: string) {
-        if (nodeId === this.schema.rootId) return
+    private canAcceptChild(parentType: NodeType['type'], childType: NodeType['type']): boolean {
+        if (parentType === 'text') return false
 
-        const node = this.schema.nodes[nodeId]
-        if (!node) return
-
-        // remove children first
-        node.children.forEach((childId) => this.remove(childId))
-
-        // detach from parent
-        const parent = node.parent ? this.schema.nodes[node.parent] : null
-
-        if (parent) {
-            parent.children = parent.children.filter((id) => id !== nodeId)
+        if (parentType === 'list') {
+            return childType === 'list-item'
         }
 
-        delete this.schema.nodes[nodeId]
-    }
-
-    remove(nodeId: string) {
-        if (nodeId === this.schema.rootId) return
-
-        const node = this.schema.nodes[nodeId]
-        if (!node) return
-
-        // remove children first
-        node.children.forEach((childId) => this.remove(childId))
-
-        // detach from parent
-        const parent = node.parent ? this.schema.nodes[node.parent] : null
-
-        if (parent) {
-            parent.children = parent.children.filter((id) => id !== nodeId)
+        if (parentType === 'list-item') {
+            return childType === 'text' || childType === 'image'
         }
 
-        delete this.schema.nodes[nodeId]
-    }
-
-    remove(nodeId: string) {
-        if (nodeId === this.schema.rootId) return
-
-        const node = this.schema.nodes[nodeId]
-        if (!node) return
-
-        // remove children first
-        node.children.forEach((childId) => this.remove(childId))
-
-        // detach from parent
-        const parent = node.parent ? this.schema.nodes[node.parent] : null
-
-        if (parent) {
-            parent.children = parent.children.filter((id) => id !== nodeId)
-        }
-
-        delete this.schema.nodes[nodeId]
+        return true
     }
 }
