@@ -11,7 +11,6 @@ import { NodeNormalizer } from '../node/NodeNormalizer'
 import { RendererRegistry } from '../renderer/RendererRegistry'
 import { StyleEngine } from '../style/StyleEngine'
 import { validateSchema } from '../validation/validate'
-
 import type { NodeType } from '../types/nodes'
 
 export type FoldUISchema = unknown

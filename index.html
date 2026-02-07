@@ -36,30 +36,25 @@
                 }
             },
             children: [
-
-                // ─── HEADER ──────────────────────────────
-
                 {
                     type: 'container',
                     props: {
                         layout: {
                             type: 'flex',
-                            justify: 'space-between',
-                            align: 'center'
-                        }
+                            justify: 'start',
+                            align: 'start'
+                        },
+                        size: {
+                            width: 'content',
+                            maxWidth: '1200px',
+                            center: true,
+                        },
                     },
                     children: [
                         {
-                            type: 'image',
-                            props: {
-                                src: 'https://www.google.com/logos/doodles/2026/icc-mens-t20-world-cup-begins-osrp-6753651837111042-sdrk.png',
-                                alt: 'FoldUI'
-                            }
-                        },
-                        {
                             type: 'list',
                             props: {
-                                variant: 'horizontal'
+                                variant: 'vertical'
                             },
                             children: [
                                 {
@@ -70,7 +65,10 @@
                                         props: {
                                             tag: 'p',
                                             content: 'Home'
-                                        }
+                                        },
+                                        style: {
+                                            fontSize: '20px',
+                                        },
                                     }]
                                 },
                                 {
@@ -80,7 +78,10 @@
                                         type: 'text', props: {
                                             tag: 'p',
                                             content: 'Docs'
-                                        }
+                                        },
+                                        style: {
+                                            fontSize: '20px',
+                                        },
                                     }]
                                 },
                                 {
@@ -90,16 +91,88 @@
                                         type: 'text', props: {
                                             tag: 'p',
                                             content: 'About'
-                                        }
+                                        },
+                                        style: {
+                                            fontSize: '20px',
+                                        },
                                     }]
                                 }
                             ]
-                        }
+                        },
+                        {
+                            type: 'list',
+                            props: {
+                                variant: 'vertical'
+                            },
+                            children: [
+                                {
+                                    type: 'list-item',
+                                    props: { href: '/' },
+                                    children: [{
+                                        type: 'text',
+                                        props: {
+                                            tag: 'p',
+                                            content: 'Home'
+                                        },
+                                        style: {
+                                            fontSize: '20px',
+                                        },
+                                    }]
+                                },
+                                {
+                                    type: 'list-item',
+                                    props: { href: '/docs' },
+                                    children: [{
+                                        type: 'text', props: {
+                                            tag: 'p',
+                                            content: 'Docs'
+                                        },
+                                        style: {
+                                            fontSize: '20px',
+                                        },
+                                    }]
+                                },
+                                {
+                                    type: 'list-item',
+                                    props: { href: '/about' },
+                                    children: [{
+                                        type: 'text', props: {
+                                            tag: 'p',
+                                            content: 'About'
+                                        },
+                                        style: {
+                                            fontSize: '20px',
+                                        },
+                                    }]
+                                }
+                            ]
+                        },
                     ]
                 },
+            ]
+        }
 
-                // ─── HERO CONTENT ─────────────────────────
 
+        const schema2 = {
+            type: 'container',
+            props: {
+                layout: {
+                    type: 'flex',
+                    direction: 'column',
+                    gap: 16
+                }
+            },
+            children: [
+                {
+                    type: 'text',
+                    props: {
+                        tag: 'p',
+                        content: 'About'
+                    },
+                    style: {
+                        fontSize: '40px'
+                    }
+                },
                 {
                     type: 'container',
                     props: {
@@ -148,30 +221,6 @@
                             ]
                         }
                     ]
-                }
-            ]
-        }
-
-
-        const schema2 = {
-            type: 'container',
-            props: {
-                layout: {
-                    type: 'flex',
-                    direction: 'column',
-                    gap: 16
-                }
-            },
-            children: [
-                {
-                    type: 'text',
-                    props: {
-                        tag: 'p',
-                        content: 'About'
-                    },
-                    style: {
-                        fontSize: '40px'
-                    }
                 }
             ]
         }

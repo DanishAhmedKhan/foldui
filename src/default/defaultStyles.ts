@@ -6,11 +6,13 @@ export const DEFAULT_STYLES: DefaultStyleMap = {
     section: {
         display: 'block',
         width: '100%',
+        padding: '50px 0px',
     },
 
     container: {
         display: 'flex',
         width: '100%',
+        padding: '30px 0px',
     },
 
     text: {
