@@ -1,15 +1,18 @@
-import { NodeNormalizer } from '../node/NodeNormalizer'
-import { ContainerRenderer } from '../renderer/ContainerRenderer'
 import { FragmentRenderer } from '../renderer/FragmentRenderer'
+import { ContainerRenderer } from '../renderer/ContainerRenderer'
+import { SectionRenderer } from '../renderer/SectionRenderer'
+import { TextRenderer } from '../renderer/TextRenderer'
 import { ImageRenderer } from '../renderer/ImageRenderer'
+import { ButtonRenderer } from '../renderer/ButtonRenderer'
 import { ListItemRenderer } from '../renderer/ListItemRenderer'
 import { ListRenderer } from '../renderer/ListRenderer'
 import { MasterRenderer } from '../renderer/MasterRenderer'
+import { NodeNormalizer } from '../node/NodeNormalizer'
 import { RendererRegistry } from '../renderer/RendererRegistry'
-import { TextRenderer } from '../renderer/TextRenderer'
 import { StyleEngine } from '../style/StyleEngine'
-import type { NodeType } from '../types/nodes'
 import { validateSchema } from '../validation/validate'
+
+import type { NodeType } from '../types/nodes'
 
 export type FoldUISchema = unknown
 
@@ -24,8 +27,10 @@ export class FoldUI {
 
         registry.register('fragment', new FragmentRenderer())
         registry.register('container', new ContainerRenderer())
+        registry.register('section', new SectionRenderer())
         registry.register('text', new TextRenderer())
         registry.register('image', new ImageRenderer())
+        registry.register('button', new ButtonRenderer())
         registry.register('list', new ListRenderer())
         registry.register('list-item', new ListItemRenderer())
 

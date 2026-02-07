@@ -1,4 +1,5 @@
 import type {
+    ButtonNode,
     ContainerNode,
     CustomNode,
     FragmentNode,
@@ -17,6 +18,7 @@ type NodeTypeMap = {
     container: ContainerNode
     text: TextNode
     image: ImageNode
+    button: ButtonNode
     list: ListNode
     'list-item': ListItemNode
     custom: CustomNode

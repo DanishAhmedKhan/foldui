@@ -1,4 +1,5 @@
 import type { BaseNode, NodeType } from '../types/nodes'
+import { DEFAULT_STYLES } from '../default/defaultStyles'
 
 export class StyleEngine {
     private css: string[] = []
@@ -22,11 +23,19 @@ export class StyleEngine {
         }
     }
 
-    private handleBaseStyle(node: BaseNode) {
-        if (!node.style) return
+    private handleBaseStyle(node: BaseNode & { type: NodeType['type'] }) {
+        const defaultStyle = DEFAULT_STYLES[node.type]
+        const userStyle = node.style
+
+        if (!defaultStyle && !userStyle) return
+
+        const merged = {
+            ...(defaultStyle ?? {}),
+            ...(userStyle ?? {}),
+        }
 
         const selector = this.selector(node.id!)
-        this.css.push(`${selector} { ${this.styleToCss(node.style)} }`)
+        this.css.push(`${selector} { ${this.styleToCss(merged)} }`)
     }
 
     private handleStateStyles(node: BaseNode) {

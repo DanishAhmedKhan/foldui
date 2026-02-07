@@ -12,6 +12,9 @@ export interface FragmentNode extends BaseNode {
 
 export interface SectionNode extends BaseNode {
     type: 'section'
+    props?: {
+        tag?: 'section' | 'header' | 'footer' | 'main' | 'aside'
+    }
 }
 
 export interface ContainerNode extends BaseNode {
@@ -51,6 +54,15 @@ export interface ImageNode extends BaseNode {
     }
 }
 
+export interface ButtonNode extends BaseNode {
+    type: 'button'
+    props: {
+        label: string
+        variant?: 'button' | 'submit' | 'reset'
+        disabled?: boolean
+    }
+}
+
 export interface ListNode extends BaseNode {
     type: 'list'
     props?: {
@@ -79,6 +91,7 @@ export type NodeType =
     | ContainerNode
     | TextNode
     | ImageNode
+    | ButtonNode
     | ListNode
     | ListItemNode
     | CustomNode
