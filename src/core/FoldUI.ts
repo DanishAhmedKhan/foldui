@@ -15,11 +15,6 @@ import type { NodeType } from '../types/nodes'
 
 export type FoldUISchema = unknown
 
-export interface FoldUIDocument {
-    version: string
-    root: NodeType
-}
-
 export class FoldUI {
     private static createRenderer(): MasterRenderer {
         const registry = new RendererRegistry()

@@ -27,6 +27,65 @@ export class FoldUIDocument {
         return structuredClone(this.schema)
     }
 
+    public toRenderSchema(): NodeType {
+        const { nodes, rootId } = this.schema
+
+        const build = (id: string): NodeType => {
+            const node = nodes[id]
+            if (!node) {
+                throw new Error(`Node not found: ${id}`)
+            }
+
+            const { parent, children, ...rest } = node
+
+            return {
+                ...rest,
+                id: node.id,
+                children: children.map(build),
+            } as NodeType
+        }
+
+        return build(rootId)
+    }
+
+    public add(type: NodeType['type'], props?: any) {
+        const node = this.createNode(type, props)
+
+        return {
+            into: (parentId: string, index?: number) => {
+                this.attach(node, parentId, index)
+                return node.id
+            },
+        }
+    }
+
+    public remove(nodeId: string) {
+        if (nodeId === this.schema.rootId) return
+
+        const node = this.schema.nodes[nodeId]
+        if (!node) return
+
+        node.children.forEach((childId) => this.remove(childId))
+
+        const parent = node.parent ? this.schema.nodes[node.parent] : null
+
+        if (parent) {
+            parent.children = parent.children.filter((id) => id !== nodeId)
+        }
+
+        delete this.schema.nodes[nodeId]
+    }
+
+    public move(nodeId: string) {
+        return {
+            into: (newParentId: string, index?: number) => {
+                this.detach(nodeId)
+                const node = this.schema.nodes[nodeId]
+                this.attach(node, newParentId, index)
+            },
+        }
+    }
+
     private createNode(type: NodeType['type'], props?: any): BuilderNode {
         return {
             id: crypto.randomUUID(),
@@ -36,17 +95,6 @@ export class FoldUIDocument {
             props,
             style: {},
         } as BuilderNode
-    }
-
-    add(type: NodeType['type'], props?: any) {
-        const node = this.createNode(type, props)
-
-        return {
-            into: (parentId: string, index?: number) => {
-                this.attach(node, parentId, index)
-                return node.id
-            },
-        }
     }
 
     private attach(node: BuilderNode, parentId: string, index?: number) {
@@ -64,35 +112,6 @@ export class FoldUIDocument {
             parent.children.push(node.id)
         } else {
             parent.children.splice(index, 0, node.id)
-        }
-    }
-
-    remove(nodeId: string) {
-        if (nodeId === this.schema.rootId) return
-
-        const node = this.schema.nodes[nodeId]
-        if (!node) return
-
-        // remove children first
-        node.children.forEach((childId) => this.remove(childId))
-
-        // detach from parent
-        const parent = node.parent ? this.schema.nodes[node.parent] : null
-
-        if (parent) {
-            parent.children = parent.children.filter((id) => id !== nodeId)
-        }
-
-        delete this.schema.nodes[nodeId]
-    }
-
-    move(nodeId: string) {
-        return {
-            into: (newParentId: string, index?: number) => {
-                this.detach(nodeId)
-                const node = this.schema.nodes[nodeId]
-                this.attach(node, newParentId, index)
-            },
         }
     }
 

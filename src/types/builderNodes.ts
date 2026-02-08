@@ -11,6 +11,8 @@ import type {
     TextNode,
 } from './nodes'
 
+type Builderize<T> = Omit<T, 'children' | 'id'>
+
 export interface BuilderBaseNode extends Omit<BaseNode, 'children' | 'id'> {
     id: string
     parent: string | null
@@ -18,15 +20,15 @@ export interface BuilderBaseNode extends Omit<BaseNode, 'children' | 'id'> {
 }
 
 export type BuilderNode =
-    | (FragmentNode & BuilderBaseNode)
-    | (SectionNode & BuilderBaseNode)
-    | (ContainerNode & BuilderBaseNode)
-    | (TextNode & BuilderBaseNode)
-    | (ImageNode & BuilderBaseNode)
-    | (ButtonNode & BuilderBaseNode)
-    | (ListNode & BuilderBaseNode)
-    | (ListItemNode & BuilderBaseNode)
-    | (CustomNode & BuilderBaseNode)
+    | (Builderize<FragmentNode> & BuilderBaseNode)
+    | (Builderize<SectionNode> & BuilderBaseNode)
+    | (Builderize<ContainerNode> & BuilderBaseNode)
+    | (Builderize<TextNode> & BuilderBaseNode)
+    | (Builderize<ImageNode> & BuilderBaseNode)
+    | (Builderize<ButtonNode> & BuilderBaseNode)
+    | (Builderize<ListNode> & BuilderBaseNode)
+    | (Builderize<ListItemNode> & BuilderBaseNode)
+    | (Builderize<CustomNode> & BuilderBaseNode)
 
 export interface BuilderDocumentSchema {
     rootId: string
