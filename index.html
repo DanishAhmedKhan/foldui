@@ -225,10 +225,10 @@
             ]
         }
 
-        FoldUI.render(containerEl, {
-            version: '1',
-            root: schema
-        })
+        // FoldUI.render(containerEl, {
+        //     version: '1',
+        //     root: schema
+        // })
 
 
         const doc = new FoldUIDocument()
@@ -242,8 +242,14 @@
         doc.add('text', { content: 'Hello FoldUI' }).into(containerId)
         doc.add('button', { label: 'Click me' }).into(containerId)
 
-        console.log(doc.getSchema())
-        console.log(doc.toRenderSchema())
+        const builderSchema = doc.toRenderSchema()
+        console.log(builderSchema)
+
+
+        FoldUI.render(containerEl, {
+            version: '0.1.0',
+            root: builderSchema
+        })
 
     </script>
 
