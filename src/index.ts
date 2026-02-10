@@ -1,2 +1,2 @@
 export * from './core/FoldUI'
-export * from './builder/FoldUIDocument'
+export * from './core/Fold'

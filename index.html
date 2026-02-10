@@ -22,234 +22,52 @@
 
     <script type="module">
 
-        import { FoldUI, FoldUIDocument } from './src/index'
+        import { Fold } from './src/index'
 
-        const containerEl = document.getElementById('container')
-
-        export const schema = {
-            type: 'section',
+        Fold.addComponent({
+            name: "text",
+            allowChildren: false,
             props: {
-                layout: {
-                    type: 'flex',
-                    direction: 'column',
-                    gap: 16
-                }
+                content: { type: "string", default: "" }
             },
-            children: [
-                {
-                    type: 'container',
-                    props: {
-                        layout: {
-                            type: 'flex',
-                            justify: 'start',
-                            align: 'start'
-                        },
-                        size: {
-                            width: 'content',
-                            maxWidth: '1200px',
-                            center: true,
-                        },
-                    },
-                    children: [
-                        {
-                            type: 'list',
-                            props: {
-                                variant: 'vertical'
-                            },
-                            children: [
-                                {
-                                    type: 'list-item',
-                                    props: { href: '/' },
-                                    children: [{
-                                        type: 'text',
-                                        props: {
-                                            tag: 'p',
-                                            content: 'Home'
-                                        },
-                                        style: {
-                                            fontSize: '20px',
-                                        },
-                                    }]
-                                },
-                                {
-                                    type: 'list-item',
-                                    props: { href: '/docs' },
-                                    children: [{
-                                        type: 'text', props: {
-                                            tag: 'p',
-                                            content: 'Docs'
-                                        },
-                                        style: {
-                                            fontSize: '20px',
-                                        },
-                                    }]
-                                },
-                                {
-                                    type: 'list-item',
-                                    props: { href: '/about' },
-                                    children: [{
-                                        type: 'text', props: {
-                                            tag: 'p',
-                                            content: 'About'
-                                        },
-                                        style: {
-                                            fontSize: '20px',
-                                        },
-                                    }]
-                                }
-                            ]
-                        },
-                        {
-                            type: 'list',
-                            props: {
-                                variant: 'vertical'
-                            },
-                            children: [
-                                {
-                                    type: 'list-item',
-                                    props: { href: '/' },
-                                    children: [{
-                                        type: 'text',
-                                        props: {
-                                            tag: 'p',
-                                            content: 'Home'
-                                        },
-                                        style: {
-                                            fontSize: '20px',
-                                        },
-                                    }]
-                                },
-                                {
-                                    type: 'list-item',
-                                    props: { href: '/docs' },
-                                    children: [{
-                                        type: 'text', props: {
-                                            tag: 'p',
-                                            content: 'Docs'
-                                        },
-                                        style: {
-                                            fontSize: '20px',
-                                        },
-                                    }]
-                                },
-                                {
-                                    type: 'list-item',
-                                    props: { href: '/about' },
-                                    children: [{
-                                        type: 'text', props: {
-                                            tag: 'p',
-                                            content: 'About'
-                                        },
-                                        style: {
-                                            fontSize: '20px',
-                                        },
-                                    }]
-                                }
-                            ]
-                        },
-                    ]
-                },
-            ]
-        }
-
-
-        const schema2 = {
-            type: 'container',
-            props: {
-                layout: {
-                    type: 'flex',
-                    direction: 'column',
-                    gap: 16
-                }
-            },
-            children: [
-                {
-                    type: 'text',
-                    props: {
-                        tag: 'p',
-                        content: 'About'
-                    },
-                    style: {
-                        fontSize: '40px'
-                    }
-                },
-                {
-                    type: 'container',
-                    props: {
-                        layout: {
-                            type: 'flex',
-                            direction: 'column',
-                            align: 'center',
-                            gap: 8
-                        }
-                    },
-                    children: [
-                        {
-                            id: 'danish-id',
-                            type: 'text',
-                            props: {
-                                tag: 'h1',
-                                content: 'Build UI by folding blocks, not writing markup.'
-                            },
-                            style: {
-                                fontSize: '40px'
-                            }
-                        },
-                        {
-                            type: 'fragment',
-                            children: [
-                                {
-                                    type: 'text',
-                                    props: {
-                                        tag: 'p',
-                                        content: 'FoldUI is'
-                                    }
-                                },
-                                {
-                                    type: 'text',
-                                    props: {
-                                        tag: 'p',
-                                        content: 'simple, composable, and fast.'
-                                    }
-                                },
-                                {
-                                    type: 'button',
-                                    props: {
-                                        label: 'Button',
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-
-        // FoldUI.render(containerEl, {
-        //     version: '1',
-        //     root: schema
-        // })
-
-
-        const doc = new FoldUIDocument()
-
-        const sectionId = doc.add('section').into(doc.getRootId())
-
-        const containerId = doc
-            .add('container', { layout: { type: 'flex' } })
-            .into(sectionId)
-
-        doc.add('text', { content: 'Hello FoldUI' }).into(containerId)
-        doc.add('button', { label: 'Click me' }).into(containerId)
-
-        const builderSchema = doc.toRenderSchema()
-        console.log(builderSchema)
-
-
-        FoldUI.render(containerEl, {
-            version: '0.1.0',
-            root: builderSchema
+            render: ({ props }) => {
+                const el = document.createElement("span")
+                el.textContent = props.content
+                return el
+            }
         })
+
+        Fold.addComponent({
+            name: "container",
+            allowChildren: true,
+            props: {
+                class: { type: "string" }
+            },
+            render: ({ props, children }) => {
+                const el = document.createElement("div")
+                if (props.class) el.className = props.class
+
+                children?.forEach(child => el.appendChild(child))
+                return el
+            }
+        })
+
+        const schema = {
+            id: "root",
+            type: "container",
+            props: { class: "page" },
+            children: [
+                {
+                    id: "t1",
+                    type: "text",
+                    props: { content: "Hello FoldUI" }
+                }
+            ]
+        }
+
+        const html = Fold.render(schema)
+
+        document.body.appendChild(html)
 
     </script>
 
