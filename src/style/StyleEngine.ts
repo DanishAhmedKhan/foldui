@@ -1,79 +1,70 @@
-import { computeContainerStyles } from './computed/containerStyles'
-import type { BaseNode, NodeType } from '../types/nodes'
-import { DEFAULT_STYLES } from '../default/defaultStyles'
+import type { ComponentRegistry } from '../core/ComponentRegistry'
+import type { FoldNode } from '../types/FoldNode'
 
 export class StyleEngine {
     private css: string[] = []
 
-    public generate(schema: NodeType): string {
-        this.walk(schema)
+    constructor(private registry: ComponentRegistry) {}
+
+    public generate(root: FoldNode): string {
+        this.css = [] // reset on every run
+        this.walk(root)
         return this.css.join('\n')
     }
 
-    private walk(node: NodeType) {
+    private walk(node: FoldNode) {
         if (node.id) {
             this.handleBaseStyle(node)
             this.handleStateStyles(node)
             this.handleResponsiveStyles(node)
         }
 
-        if (node.children) {
+        if (node.children?.length) {
             for (const child of node.children) {
                 this.walk(child)
             }
         }
     }
-    private handleBaseStyle(node: NodeType) {
-        const defaultStyle = DEFAULT_STYLES[node.type]
-        const computedStyle = this.computeStyle(node)
+
+    private handleBaseStyle(node: FoldNode) {
+        const component = this.registry.get(node.type)
+        const defaultStyle = component?.defaultStyle
         const userStyle = node.style
 
-        if (!defaultStyle && !userStyle && !Object.keys(computedStyle).length) {
-            return
-        }
+        if (!defaultStyle && !userStyle) return
 
         const merged = {
             ...(defaultStyle ?? {}),
-            ...computedStyle,
             ...(userStyle ?? {}),
         }
+
+        if (!Object.keys(merged).length) return
 
         const selector = this.selector(node.id!)
         this.css.push(`${selector} { ${this.styleToCss(merged)} }`)
     }
 
-    private computeStyle(node: NodeType): Record<string, any> {
-        switch (node.type) {
-            case 'container':
-                return computeContainerStyles(node)
-            default:
-                return {}
-        }
-    }
-
-    private handleStateStyles(node: BaseNode) {
+    private handleStateStyles(node: FoldNode) {
         if (!node.states) return
 
         for (const state in node.states) {
+            const styles = node.states[state]
+            if (!styles || !Object.keys(styles).length) continue
+
             const selector = `${this.selector(node.id!)}:${state}`
-            this.css.push(`${selector} { ${this.styleToCss(node.states[state])} }`)
+            this.css.push(`${selector} { ${this.styleToCss(styles)} }`)
         }
     }
 
-    private handleResponsiveStyles(node: BaseNode) {
+    private handleResponsiveStyles(node: FoldNode) {
         if (!node.responsive) return
 
         for (const query in node.responsive) {
             const styles = node.responsive[query]
-            const selector = this.selector(node.id!)
+            if (!styles || !Object.keys(styles).length) continue
 
-            this.css.push(`
-                @media ${query} {
-                    ${selector} {
-                        ${this.styleToCss(styles)}
-                    }
-                }
-            `)
+            const selector = this.selector(node.id!)
+            this.css.push(`@media ${query} { ${selector} { ${this.styleToCss(styles)} } }`)
         }
     }
 
@@ -85,9 +76,14 @@ export class StyleEngine {
         return Object.entries(style)
             .map(([key, value]) => {
                 const prop = this.toKebabCase(key)
-                const val = typeof value === 'number' ? `${value}px` : value
+
+                if (value == null) return ''
+
+                const val = typeof value === 'number' && prop !== 'opacity' ? `${value}px` : String(value)
+
                 return `${prop}: ${val};`
             })
+            .filter(Boolean)
             .join(' ')
     }
 

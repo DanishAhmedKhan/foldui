@@ -67,7 +67,8 @@
 
         const html = Fold.render(schema)
 
-        document.body.appendChild(html)
+        const containerEl = document.getElementById('container')
+        containerEl.appendChild(html)
 
     </script>
 

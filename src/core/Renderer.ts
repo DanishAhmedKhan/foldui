@@ -7,20 +7,21 @@ export class Renderer {
 
     public render(node: FoldNode): HTMLElement {
         const component = this.registry.get(node.type)
-
         if (!component) {
             throw new Error(`Unknown component "${node.type}"`)
         }
 
         const props = this.resolveProps(component, node.props)
+        const children = node.children?.map((child) => this.render(child)) ?? []
+
         const el = component.render({
             id: node.id,
             props,
-            children: component.allowChildren ? node.children?.map((child) => this.render(child)) : undefined,
+            children,
         })
 
-        el.setAttribute('data-fui-id', node.id)
-        el.setAttribute('data-fui-type', node.type)
+        el.setAttribute('data-foldui-id', node.id)
+        el.setAttribute('data-foldui-type', node.type)
 
         return el
     }
