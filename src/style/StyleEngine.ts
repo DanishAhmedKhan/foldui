@@ -1,23 +1,24 @@
 import type { ComponentRegistry } from '../core/ComponentRegistry'
 import type { FoldNode } from '../types/FoldNode'
-
 export class StyleEngine {
     private css: string[] = []
+    private emittedComponents = new Set<string>()
 
-    constructor(private registry: ComponentRegistry) {}
+    constructor(private registry: ComponentRegistry, private breakpoints: Record<string, string> = {}) {}
 
     public generate(root: FoldNode): string {
-        this.css = [] // reset on every run
+        this.css = []
+        this.emittedComponents.clear()
+
         this.walk(root)
+
         return this.css.join('\n')
     }
 
     private walk(node: FoldNode) {
-        if (node.id) {
-            this.handleBaseStyle(node)
-            this.handleStateStyles(node)
-            this.handleResponsiveStyles(node)
-        }
+        this.handleComponentDefaultStyle(node)
+        this.handleInstanceStyle(node)
+        this.handleResponsiveStyles(node)
 
         if (node.children?.length) {
             for (const child of node.children) {
@@ -26,60 +27,60 @@ export class StyleEngine {
         }
     }
 
-    private handleBaseStyle(node: FoldNode) {
+    // 🔹 Emit component-level default style ONCE
+    private handleComponentDefaultStyle(node: FoldNode) {
         const component = this.registry.get(node.type)
-        const defaultStyle = component?.defaultStyle
-        const userStyle = node.style
+        if (!component?.defaultStyle) return
 
-        if (!defaultStyle && !userStyle) return
+        if (this.emittedComponents.has(node.type)) return
 
-        const merged = {
-            ...(defaultStyle ?? {}),
-            ...(userStyle ?? {}),
-        }
+        const selector = `.fui-${node.type}`
+        this.pushRule(selector, component.defaultStyle)
 
-        if (!Object.keys(merged).length) return
-
-        const selector = this.selector(node.id!)
-        this.css.push(`${selector} { ${this.styleToCss(merged)} }`)
+        this.emittedComponents.add(node.type)
     }
 
-    private handleStateStyles(node: FoldNode) {
-        if (!node.states) return
+    // 🔹 Emit only user style for this specific node
+    private handleInstanceStyle(node: FoldNode) {
+        if (!node.style || !Object.keys(node.style).length) return
 
-        for (const state in node.states) {
-            const styles = node.states[state]
-            if (!styles || !Object.keys(styles).length) continue
-
-            const selector = `${this.selector(node.id!)}:${state}`
-            this.css.push(`${selector} { ${this.styleToCss(styles)} }`)
-        }
+        const selector = this.selector(node.id)
+        this.pushRule(selector, node.style)
     }
 
     private handleResponsiveStyles(node: FoldNode) {
         if (!node.responsive) return
 
-        for (const query in node.responsive) {
-            const styles = node.responsive[query]
-            if (!styles || !Object.keys(styles).length) continue
+        for (const bp in node.responsive) {
+            const config = node.responsive[bp]
+            if (!config?.style) continue
 
-            const selector = this.selector(node.id!)
-            this.css.push(`@media ${query} { ${selector} { ${this.styleToCss(styles)} } }`)
+            const mediaQuery = this.breakpoints[bp]
+            if (!mediaQuery) continue
+
+            const selector = this.selector(node.id)
+
+            this.css.push(`@media ${mediaQuery} { ${selector} { ${this.styleToCss(config.style)} } }`)
         }
     }
 
+    private pushRule(selector: string, style: Record<string, any>) {
+        if (!Object.keys(style).length) return
+        this.css.push(`${selector} { ${this.styleToCss(style)} }`)
+    }
+
     private selector(id: string) {
-        return `[data-foldui-id="${id}"]`
+        return `[data-fui-id="${id}"]`
     }
 
     private styleToCss(style: Record<string, any>): string {
         return Object.entries(style)
             .map(([key, value]) => {
-                const prop = this.toKebabCase(key)
-
                 if (value == null) return ''
 
-                const val = typeof value === 'number' && prop !== 'opacity' ? `${value}px` : String(value)
+                const prop = this.toKebabCase(key)
+
+                const val = typeof value === 'number' && !this.isUnitless(prop) ? `${value}px` : String(value)
 
                 return `${prop}: ${val};`
             })
@@ -88,6 +89,12 @@ export class StyleEngine {
     }
 
     private toKebabCase(str: string) {
-        return str.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)
+        return str.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())
+    }
+
+    private unitless = new Set(['opacity', 'z-index', 'font-weight', 'line-height', 'flex', 'flex-grow', 'flex-shrink'])
+
+    private isUnitless(prop: string) {
+        return this.unitless.has(prop)
     }
 }

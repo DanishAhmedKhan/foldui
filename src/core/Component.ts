@@ -5,7 +5,7 @@ export interface Component<Props extends Record<string, any> = Record<string, an
 
     props?: Record<keyof Props, FoldPropSchema>
 
-    defaultStyle: Record<string, string>
+    defaultStyle?: Record<string, string>
 
-    render(ctx: { id: string; props: Props; children?: HTMLElement[] }): HTMLElement
+    render(ctx: { id: string; props: Props }): HTMLElement
 }

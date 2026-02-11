@@ -12,16 +12,22 @@ export class Renderer {
         }
 
         const props = this.resolveProps(component, node.props)
-        const children = node.children?.map((child) => this.render(child)) ?? []
 
         const el = component.render({
             id: node.id,
             props,
-            children,
         })
 
-        el.setAttribute('data-foldui-id', node.id)
-        el.setAttribute('data-foldui-type', node.type)
+        el.classList.add(`fui-${node.type}`)
+        el.setAttribute('data-fui-id', node.id)
+        el.setAttribute('data-fui-type', node.type)
+
+        if (node.children?.length) {
+            for (const childNode of node.children) {
+                const childEl = this.render(childNode)
+                el.appendChild(childEl)
+            }
+        }
 
         return el
     }

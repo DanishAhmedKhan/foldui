@@ -25,10 +25,20 @@
         import { Fold } from './src/index'
 
         Fold.addComponent({
-            name: "text",
-            allowChildren: false,
+            name: "section",
             props: {
-                content: { type: "string", default: "" }
+            },
+            render: ({ props }) => {
+            }
+        })
+
+        Fold.addComponent({
+            name: "text",
+            props: {
+                content: { type: "string", default: "This is a text" }
+            },
+            defaultStyle: {
+                fontSize: '30px',
             },
             render: ({ props }) => {
                 const el = document.createElement("span")
@@ -38,14 +48,49 @@
         })
 
         Fold.addComponent({
-            name: "container",
-            allowChildren: true,
+            name: "button",
             props: {
-                class: { type: "string" }
+                label: { type: "string", default: "Button" }
+            },
+            render: ({ props }) => {
+                const el = document.createElement("button")
+                el.textContent = props.label
+                return el
+            }
+        })
+
+        Fold.addComponent({
+            name: "container",
+            props: {
+                layout: {
+                    type: "object",
+                    defaultVariant: "flex",
+                    variants: {
+                        flex: {
+                            align: { type: "string", default: "center" },
+                            justify: { type: "string", default: "center" }
+                        },
+                        grid: {
+                            columns: { type: "number", default: 3 },
+                            gap: { type: "number", default: 10 }
+                        }
+                    }
+                }
             },
             render: ({ props, children }) => {
                 const el = document.createElement("div")
-                if (props.class) el.className = props.class
+
+                if (props.layout?.type === "flex") {
+                    el.style.display = "flex"
+                    el.style.alignItems = props.layout.align
+                    el.style.justifyContent = props.layout.justify
+                }
+
+                if (props.layout?.type === "grid") {
+                    el.style.display = "grid"
+                    el.style.gridTemplateColumns = `repeat(${props.layout.columns}, 1fr)`
+                    el.style.gap = `${props.layout.gap}px`
+                }
 
                 children?.forEach(child => el.appendChild(child))
                 return el
@@ -55,13 +100,17 @@
         const schema = {
             id: "root",
             type: "container",
-            props: { class: "page" },
+            props: {},
             children: [
                 {
                     id: "t1",
                     type: "text",
-                    props: { content: "Hello FoldUI" }
-                }
+                    props: { content: "Hello FoldUI" },
+                    style: {
+                        // fontSize: '30px',
+                        color: 'red',
+                    }
+                },
             ]
         }
 
