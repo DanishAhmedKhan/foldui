@@ -27,21 +27,32 @@
         Fold.addComponent({
             name: "section",
             props: {
+                tag: { type: "string", default: "section" },
+            },
+            defaultStyle: {
+                padding: '100px 0px'
             },
             render: ({ props }) => {
+                const tag = props.tag
+                const el = document.createElement(tag)
+                return el
+
             }
         })
 
         Fold.addComponent({
             name: "text",
             props: {
+                tag: { type: "string", default: "span" },
                 content: { type: "string", default: "This is a text" }
             },
             defaultStyle: {
-                fontSize: '30px',
+                fontSize: '16px',
+                color: '#333',
             },
             render: ({ props }) => {
-                const el = document.createElement("span")
+                const tag = props.tag
+                const el = document.createElement(tag)
                 el.textContent = props.content
                 return el
             }
@@ -52,9 +63,36 @@
             props: {
                 label: { type: "string", default: "Button" }
             },
+            defaultStyle: {
+                fontSize: '18px',
+                padding: '8px 16px',
+                background: 'blue',
+                border: 'none',
+                outline: 'none',
+                color: 'white',
+                borderRadius: '10px',
+                cursor: 'pointer',
+            },
             render: ({ props }) => {
                 const el = document.createElement("button")
                 el.textContent = props.label
+                return el
+            }
+        })
+
+        Fold.addComponent({
+            name: "image",
+            props: {
+                src: { type: "string", default: "" },
+                alt: { type: "string", default: "alt" }
+            },
+            defaultStyle: {
+                width: '100%',
+            },
+            render: ({ props }) => {
+                const el = document.createElement("img")
+                el.src = props.src
+                el.alt = props.alt
                 return el
             }
         })
@@ -67,7 +105,8 @@
                     defaultVariant: "flex",
                     variants: {
                         flex: {
-                            align: { type: "string", default: "center" },
+                            direction: { type: "string", default: "horizontal" },
+                            align: { type: "string", default: "flex-start" },
                             justify: { type: "string", default: "center" }
                         },
                         grid: {
@@ -75,43 +114,109 @@
                             gap: { type: "number", default: 10 }
                         }
                     }
-                }
+                },
+                size: {
+                    width: { type: "string", default: "1200px" },
+                    maxWidth: { type: "string", default: "1200px" },
+                },
             },
             render: ({ props, children }) => {
                 const el = document.createElement("div")
 
-                if (props.layout?.type === "flex") {
+                const layout = props.layout
+
+                if (layout?.type === "flex") {
                     el.style.display = "flex"
-                    el.style.alignItems = props.layout.align
-                    el.style.justifyContent = props.layout.justify
+
+                    el.style.flexDirection =
+                        layout.direction === "vertical" ? "column" : "row"
+
+                    el.style.alignItems = layout.align
+
+                    el.style.justifyContent = layout.justify
                 }
 
-                if (props.layout?.type === "grid") {
+                if (layout?.type === "grid") {
                     el.style.display = "grid"
-                    el.style.gridTemplateColumns = `repeat(${props.layout.columns}, 1fr)`
-                    el.style.gap = `${props.layout.gap}px`
+                    el.style.gridTemplateColumns = `repeat(${layout.columns}, 1fr)`
+                    el.style.gap = `${layout.gap}px`
                 }
 
-                children?.forEach(child => el.appendChild(child))
                 return el
             }
         })
 
         const schema = {
-            id: "root",
-            type: "container",
-            props: {},
+            type: 'section',
+            style: {
+                background: '#eeebff',
+            },
             children: [
                 {
-                    id: "t1",
-                    type: "text",
-                    props: { content: "Hello FoldUI" },
+                    id: "root",
+                    type: "container",
+                    props: {
+                        layout: {
+                            type: 'flex',
+                            // clumn: 2,
+                            // gap: 50
+                        }
+                    },
                     style: {
-                        // fontSize: '30px',
-                        color: 'red',
-                    }
-                },
-            ]
+                        margin: '0 auto',
+                        width: '100%',
+                        maxWidth: '1200px'
+                    },
+                    children: [
+                        {
+                            id: 'asdg',
+                            type: 'container',
+                            props: {
+                                layout: {
+                                    type: 'flex',
+                                    direction: 'vertical',
+                                    justify: 'center',
+                                    align: 'flex-start',
+                                }
+                            },
+                            children: [
+                                {
+                                    id: "t1",
+                                    type: "text",
+                                    props: {
+                                        content: "The best amazing menu builder that converts and is well structured. Analytics and SEO included.",
+                                        tag: 'h1',
+                                    },
+                                    style: {
+                                        fontSize: '20px',
+                                        marginBottom: '30px'
+                                    }
+                                },
+                                {
+                                    id: "b1",
+                                    type: "button",
+                                    props: { label: "Click Me!" },
+                                },
+                            ]
+                        },
+                        {
+                            id: 'jvoiwe',
+                            type: 'container',
+                            children: [
+                                {
+                                    id: "i1",
+                                    type: "image",
+                                    props: {
+                                        src: "https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/news/2026/01_23_alps/cover.jpg",
+                                        alt: 'car'
+                                    },
+                                },
+                            ]
+                        },
+
+                    ]
+                }
+            ],
         }
 
         const html = Fold.render(schema)
