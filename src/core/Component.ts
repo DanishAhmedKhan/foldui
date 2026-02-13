@@ -7,5 +7,5 @@ export interface Component<Props extends Record<string, any> = Record<string, an
 
     defaultStyle?: Record<string, string>
 
-    render(ctx: { id: string; props: Props }): HTMLElement
+    render(ctx: { id: string; props: Props; el: (tag: string, part?: string) => HTMLElement }): HTMLElement
 }

@@ -219,7 +219,48 @@
             ],
         }
 
-        const html = Fold.render(schema)
+        const schema2 = {
+            type: 'container',
+            prop: {
+                layout: {
+                    type: 'flex',
+                    direction: 'horizontal'
+                }
+            },
+            style: {
+                container: {
+                    width: '100%'
+                },
+                row: {
+                    width: '1200px'
+                },
+            },
+            render: ({ props }) => {
+                const el = document.createElement('div')
+                el.dataset.part = 'container'
+                const row = document.createElement('div')
+                row.dataset.part = 'row'
+
+                el.appendChild(row)
+                return el
+            },
+            responsive: {
+                mobile: {
+                    style: {
+                        row: {
+                            width: '400px'
+                        }
+                    },
+                    prop: {
+                        layout: {
+                            direction: 'vertical'
+                        }
+                    }
+                }
+            }
+        }
+
+        const html = Fold.render(schema2)
 
         const containerEl = document.getElementById('container')
         containerEl.appendChild(html)

@@ -7,29 +7,43 @@ export class Renderer {
 
     public render(node: FoldNode): HTMLElement {
         const component = this.registry.get(node.type)
+
         if (!component) {
             throw new Error(`Unknown component "${node.type}"`)
         }
 
         const props = this.resolveProps(component, node.props)
 
-        const el = component.render({
+        const createEl = (tag: string, part?: string): HTMLElement => {
+            const element = document.createElement(tag)
+
+            if (part) {
+                element.dataset.part = part
+            }
+
+            element.dataset.fuiOwner = node.id
+
+            return element
+        }
+
+        const rootEl = component.render({
             id: node.id,
             props,
+            el: createEl,
         })
 
-        el.classList.add(`fui-${node.type}`)
-        el.setAttribute('data-fui-id', node.id)
-        el.setAttribute('data-fui-type', node.type)
+        rootEl.classList.add(`fui-${node.type}`)
+        rootEl.setAttribute('data-fui-id', node.id)
+        rootEl.setAttribute('data-fui-type', node.type)
 
         if (node.children?.length) {
             for (const childNode of node.children) {
                 const childEl = this.render(childNode)
-                el.appendChild(childEl)
+                rootEl.appendChild(childEl)
             }
         }
 
-        return el
+        return rootEl
     }
 
     private resolveProps(component: Component, incomingProps?: Record<string, any>) {
