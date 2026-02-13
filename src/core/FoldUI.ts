@@ -1,8 +1,8 @@
 import { Renderer } from './Renderer'
 import { ComponentRegistry } from './ComponentRegistry'
+import { StyleEngine } from './StyleEngine'
 import type { FoldNode } from '../types/FoldNode'
 import type { Component } from './Component'
-import { StyleEngine } from '../style/StyleEngine'
 
 export type FoldUISchema = unknown
 

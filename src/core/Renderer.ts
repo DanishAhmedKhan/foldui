@@ -12,7 +12,8 @@ export class Renderer {
             throw new Error(`Unknown component "${node.type}"`)
         }
 
-        const props = this.resolveProps(component, node.props)
+        const mergedProps = this.mergeResponsiveProps(node)
+        const props = this.resolveProps(component, mergedProps)
 
         const createEl = (tag: string, part?: string): HTMLElement => {
             const element = document.createElement(tag)
@@ -64,5 +65,35 @@ export class Renderer {
         }
 
         return resolved
+    }
+
+    private mergeResponsiveProps(node: FoldNode) {
+        const baseProps = { ...(node.props || {}) }
+
+        if (!node.responsive) return baseProps
+
+        const width = window.innerWidth
+
+        for (const bp in node.responsive) {
+            const config = node.responsive[bp]
+            if (!config?.props) continue
+
+            if (bp === 'mobile' && width <= 768) {
+                this.deepMerge(baseProps, config.props)
+            }
+        }
+
+        return baseProps
+    }
+
+    private deepMerge(target: any, source: any) {
+        for (const key in source) {
+            if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                if (!target[key]) target[key] = {}
+                this.deepMerge(target[key], source[key])
+            } else {
+                target[key] = source[key]
+            }
+        }
     }
 }

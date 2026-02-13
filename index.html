@@ -58,27 +58,27 @@
             }
         })
 
-        Fold.addComponent({
-            name: "button",
-            props: {
-                label: { type: "string", default: "Button" }
-            },
-            defaultStyle: {
-                fontSize: '18px',
-                padding: '8px 16px',
-                background: 'blue',
-                border: 'none',
-                outline: 'none',
-                color: 'white',
-                borderRadius: '10px',
-                cursor: 'pointer',
-            },
-            render: ({ props }) => {
-                const el = document.createElement("button")
-                el.textContent = props.label
-                return el
-            }
-        })
+        // Fold.addComponent({
+        //     name: "button",
+        //     props: {
+        //         label: { type: "string", default: "Button" }
+        //     },
+        //     defaultStyle: {
+        //         fontSize: '18px',
+        //         padding: '8px 16px',
+        //         background: 'blue',
+        //         border: 'none',
+        //         outline: 'none',
+        //         color: 'white',
+        //         borderRadius: '10px',
+        //         cursor: 'pointer',
+        //     },
+        //     render: ({ props }) => {
+        //         const el = document.createElement("button")
+        //         el.textContent = props.label
+        //         return el
+        //     }
+        // })
 
         Fold.addComponent({
             name: "image",
@@ -143,6 +143,60 @@
                 }
 
                 return el
+            }
+        })
+
+        Fold.addComponent({
+            name: "button",
+            props: {
+                link: { type: "string", default: "#" },
+                text: { type: "string", default: "Button" },
+                icon: {
+                    content: { type: "string", default: "" },
+                    position: { type: "string", default: "right" },
+                    spacing: { type: "string", default: '10px' },
+                }
+            },
+            defaultStyle: {
+                button: {
+                    display: "inline-flex",
+                    padding: "8px 16px",
+                    fontSize: "18px",
+                    outline: "none",
+                    border: "none",
+                    color: "white",
+                    textDecoration: 'none',
+                },
+                icon: {
+                    display: "block",
+                    fill: "white"
+                }
+            },
+            render: ({ props, el }) => {
+                console.log(props)
+
+                const buttonEl = el("a", "button")
+                buttonEl.href = props.link
+                buttonEl.innerText = props.text
+
+                let icon = props.icon?.content
+                if (icon) {
+                    const tempEl = document.createElement('div')
+                    tempEl.innerHTML = icon
+                    icon = tempEl.firstChild
+                    icon.dataset.part = 'icon'
+
+                    if (props.icon.position === 'right') {
+                        buttonEl.append(icon)
+                    } else {
+                        buttonEl.prepend(icon)
+                    }
+
+                    console.log(props.icon.spacing)
+                    buttonEl.style.gap = props.icon.spacing
+                }
+
+                return buttonEl
             }
         })
 
@@ -219,32 +273,33 @@
             ],
         }
 
+        const plusIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>'
+
         const schema2 = {
+            id: "b1",
             type: 'button',
-            prop: {
-                layout: {
-                    type: 'flex',
-                    direction: 'horizontal'
+            props: {
+                label: "Click Me",
+                icon: {
+                    content: plusIcon,
+                    position: "left",
                 }
             },
             style: {
-                container: {
-                    width: '100%'
-                },
-                row: {
-                    width: '1200px'
+                button: {
+                    background: 'red'
                 },
             },
             responsive: {
                 mobile: {
                     style: {
-                        row: {
-                            width: '400px'
+                        button: {
+                            background: 'blue'
                         }
                     },
                     prop: {
-                        layout: {
-                            direction: 'vertical'
+                        icon: {
+                            position: "right"
                         }
                     }
                 }

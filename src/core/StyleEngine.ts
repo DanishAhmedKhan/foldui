@@ -27,25 +27,37 @@ export class StyleEngine {
         }
     }
 
-    // 🔹 Emit component-level default style ONCE
     private handleComponentDefaultStyle(node: FoldNode) {
         const component = this.registry.get(node.type)
         if (!component?.defaultStyle) return
 
         if (this.emittedComponents.has(node.type)) return
 
-        const selector = `.fui-${node.type}`
-        this.pushRule(selector, component.defaultStyle)
+        for (const part in component.defaultStyle) {
+            const styleObj = component.defaultStyle[part]
+            if (!styleObj) continue
+
+            const selector = `.fui-${node.type} [data-part="${part}"], .fui-${node.type}[data-part="${part}"]`
+            this.pushRule(selector, styleObj)
+        }
 
         this.emittedComponents.add(node.type)
     }
 
-    // 🔹 Emit only user style for this specific node
     private handleInstanceStyle(node: FoldNode) {
-        if (!node.style || !Object.keys(node.style).length) return
+        if (!node.style) return
 
-        const selector = this.selector(node.id)
-        this.pushRule(selector, node.style)
+        for (const part in node.style) {
+            const styleObj = node.style[part]
+            if (!styleObj || !Object.keys(styleObj).length) continue
+
+            const selector = this.partSelector(node.id, part)
+            this.pushRule(selector, styleObj)
+        }
+    }
+
+    private partSelector(id: string, part: string) {
+        return `[data-fui-owner="${id}"][data-part="${part}"]`
     }
 
     private handleResponsiveStyles(node: FoldNode) {
@@ -58,19 +70,20 @@ export class StyleEngine {
             const mediaQuery = this.breakpoints[bp]
             if (!mediaQuery) continue
 
-            const selector = this.selector(node.id)
+            for (const part in config.style) {
+                const styleObj = config.style[part]
+                if (!styleObj) continue
 
-            this.css.push(`@media ${mediaQuery} { ${selector} { ${this.styleToCss(config.style)} } }`)
+                const selector = this.partSelector(node.id, part)
+
+                this.css.push(`@media ${mediaQuery} { ${selector} { ${this.styleToCss(styleObj)} } }`)
+            }
         }
     }
 
     private pushRule(selector: string, style: Record<string, any>) {
         if (!Object.keys(style).length) return
         this.css.push(`${selector} { ${this.styleToCss(style)} }`)
-    }
-
-    private selector(id: string) {
-        return `[data-fui-id="${id}"]`
     }
 
     private styleToCss(style: Record<string, any>): string {
