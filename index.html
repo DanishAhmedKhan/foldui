@@ -220,7 +220,7 @@
         }
 
         const schema2 = {
-            type: 'container',
+            type: 'button',
             prop: {
                 layout: {
                     type: 'flex',
@@ -234,15 +234,6 @@
                 row: {
                     width: '1200px'
                 },
-            },
-            render: ({ props }) => {
-                const el = document.createElement('div')
-                el.dataset.part = 'container'
-                const row = document.createElement('div')
-                row.dataset.part = 'row'
-
-                el.appendChild(row)
-                return el
             },
             responsive: {
                 mobile: {
