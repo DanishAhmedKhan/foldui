@@ -1,11 +1,19 @@
 import type { FoldPropSchema } from '../types/FoldProp'
 
-export interface Component<Props extends Record<string, any> = Record<string, any>> {
+type InferProps<Schema extends Record<string, FoldPropSchema>> = {
+    [K in keyof Schema]: Schema[K] extends { default: infer D } ? D : any
+}
+
+export interface Component<PropSchema extends Record<string, FoldPropSchema> = Record<string, FoldPropSchema>> {
     name: string
 
-    props?: Record<keyof Props, FoldPropSchema>
+    props?: PropSchema
 
     defaultStyle?: Record<string, Record<string, any>>
 
-    render(ctx: { id: string; props: Props; el: (tag: string, part?: string) => HTMLElement }): HTMLElement
+    render(ctx: {
+        id: string
+        props: InferProps<PropSchema>
+        el: (tag: string, part?: string) => HTMLElement
+    }): HTMLElement
 }
