@@ -1,6 +1,6 @@
 {
     "name": "foldui",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "type": "module",
     "description": "Schema-driven engine for building web UI",
     "main": "./dist/foldui.cjs.js",
