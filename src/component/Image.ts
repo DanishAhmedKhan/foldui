@@ -11,8 +11,8 @@ export const Image = defineComponent({
             width: '100%',
         },
     },
-    render: ({ props, el }) => {
-        const imageEl = el('img', 'image')
+    render: ({ props, helper }) => {
+        const imageEl = helper.el('img', 'image')
         imageEl.src = props.src
         imageEl.alt = props.alt
         return imageEl

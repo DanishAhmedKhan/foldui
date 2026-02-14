@@ -12,9 +12,9 @@ export const Text = defineComponent({
             color: '#333',
         },
     },
-    render: ({ props, el }) => {
+    render: ({ props, helper }) => {
         const tag = props.tag
-        const textEl = el(tag, 'text')
+        const textEl = helper.el(tag, 'text')
         textEl.textContent = props.text
         return textEl
     },

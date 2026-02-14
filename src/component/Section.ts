@@ -10,9 +10,9 @@ export const Section = defineComponent({
             padding: '100px 0px',
         },
     },
-    render: ({ props, el }) => {
+    render: ({ props, helper }) => {
         const tag = props.tag
-        const sectionEl = el(tag, 'section')
+        const sectionEl = helper.el(tag, 'section')
         return sectionEl
     },
 })

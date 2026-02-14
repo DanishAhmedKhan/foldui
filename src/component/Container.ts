@@ -23,8 +23,8 @@ export const Container = defineComponent({
             maxWidth: { type: 'string', default: '1200px' },
         },
     },
-    render: ({ props, el }) => {
-        const containerEl = el('div', 'container')
+    render: ({ props, helper }) => {
+        const containerEl = helper.el('div', 'container')
 
         const layout = props.layout
 

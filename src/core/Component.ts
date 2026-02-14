@@ -17,9 +17,5 @@ export interface Component<PropSchema extends FoldPropsSchema = FoldPropsSchema>
 
     defaultStyle?: Record<string, Record<string, any>>
 
-    render(ctx: {
-        id: string
-        props: InferProps<PropSchema>
-        el: <K extends keyof HTMLElementTagNameMap>(tag: K, part?: string) => HTMLElementTagNameMap[K]
-    }): HTMLElement
+    render(ctx: { id: string; props: InferProps<PropSchema>; helper: any }): HTMLElement
 }

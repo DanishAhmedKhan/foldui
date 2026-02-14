@@ -16,22 +16,12 @@ export class Renderer {
         const mergedProps = this.mergeResponsiveProps(node)
         const props = this.resolveProps(component, mergedProps)
 
-        const createEl = <K extends keyof HTMLElementTagNameMap>(tag: K, part?: string): HTMLElementTagNameMap[K] => {
-            const element = document.createElement(tag)
-
-            if (part) {
-                element.dataset.part = part
-            }
-
-            element.dataset.fuiOwner = node.id
-
-            return element
-        }
+        const helper = this.createRenderHelper(node)
 
         const rootEl = component.render({
             id: node.id,
             props,
-            el: createEl,
+            helper,
         })
 
         rootEl.classList.add(`fui-${node.type}`)
@@ -105,6 +95,31 @@ export class Renderer {
             } else {
                 target[key] = source[key]
             }
+        }
+    }
+
+    private createRenderHelper(node: FoldNode) {
+        return {
+            el: <K extends string>(
+                tag: K,
+                part?: string,
+            ): K extends keyof HTMLElementTagNameMap ? HTMLElementTagNameMap[K] : HTMLElement => {
+                const element = document.createElement(tag)
+
+                if (part) {
+                    element.setAttribute('data-part', part)
+                }
+
+                element.setAttribute('data-fui-owner', node.id)
+
+                return element as any
+            },
+
+            createSvg(svgString: string) {
+                const template = document.createElement('template')
+                template.innerHTML = svgString.trim()
+                return template.content.firstElementChild as SVGElement
+            },
         }
     }
 }

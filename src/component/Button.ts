@@ -28,8 +28,8 @@ export const Button = defineComponent({
             fill: 'white',
         },
     },
-    render: ({ props, el }) => {
-        const buttonEl = el('a', 'button')
+    render: ({ props, helper }) => {
+        const buttonEl = helper.el('a', 'button')
         buttonEl.href = props.link
         buttonEl.innerText = props.text
 

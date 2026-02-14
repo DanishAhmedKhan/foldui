@@ -24,110 +24,159 @@
 
         import { Fold } from './src/index'
 
+        const rightArrowIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg>'
+        const plusIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>'
+
         const schema = {
+            id: 's1',
             type: 'section',
             style: {
-                background: '#eeebff',
+                section: {
+                    background: 'lightcyan',
+                }
             },
             children: [
                 {
-                    id: "root",
-                    type: "container",
+                    id: 'c1',
+                    type: 'container',
                     props: {
                         layout: {
-                            type: 'flex',
-                            // clumn: 2,
-                            // gap: 50
-                        }
+                            type: 'grid',
+                            columns: 2,
+                            gap: 100,
+                        },
                     },
                     style: {
-                        margin: '0 auto',
-                        width: '100%',
-                        maxWidth: '1200px'
+                        container: {
+                            maxWidth: '1200px',
+                            width: '100%',
+                            margin: '0 auto'
+                        }
                     },
                     children: [
                         {
-                            id: 'asdg',
+                            id: 'c2',
                             type: 'container',
                             props: {
                                 layout: {
                                     type: 'flex',
                                     direction: 'vertical',
-                                    justify: 'center',
                                     align: 'flex-start',
+                                    justify: 'center',
+                                },
+                            },
+                            style: {
+                                container: {
                                 }
                             },
                             children: [
                                 {
-                                    id: "t1",
-                                    type: "text",
+                                    id: 't1',
+                                    type: 'text',
                                     props: {
-                                        content: "The best amazing menu builder that converts and is well structured. Analytics and SEO included.",
                                         tag: 'h1',
+                                        text: "Schema-driven engine for building web UI"
                                     },
                                     style: {
-                                        fontSize: '20px',
-                                        marginBottom: '30px'
+                                        text: {
+                                            fontSize: '30px',
+                                            marginBottom: '10px',
+                                        }
                                     }
                                 },
                                 {
                                     id: "b1",
-                                    type: "button",
-                                    props: { label: "Click Me!" },
-                                },
-                            ]
-                        },
-                        {
-                            id: 'jvoiwe',
-                            type: 'container',
-                            children: [
-                                {
-                                    id: "i1",
-                                    type: "image",
+                                    type: 'button',
                                     props: {
-                                        src: "https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/news/2026/01_23_alps/cover.jpg",
-                                        alt: 'car'
+                                        text: "Get Started",
+                                        icon: {
+                                            content: rightArrowIcon,
+                                            position: "right",
+                                        }
+                                    },
+                                    style: {
+                                        button: {
+                                            background: 'purple',
+                                            borderRadius: '10px',
+                                            padding: '10px 20px',
+                                        },
                                     },
                                 },
                             ]
                         },
-
+                        {
+                            id: 'c3',
+                            type: 'container',
+                            props: {
+                                layout: {
+                                    type: 'flex',
+                                    direction: 'vertical',
+                                },
+                            },
+                            style: {
+                                container: {
+                                },
+                            },
+                            children: [
+                                {
+                                    id: 'i1',
+                                    type: 'image',
+                                    props: {
+                                        src: "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f"
+                                    }
+                                },
+                            ]
+                        },
                     ]
                 }
             ],
         }
 
-        const plusIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>'
+        Fold.addComponent({
+            name: 'main',
+            render: ({ props, helper }) => {
+                const sectionEl = helper.el('section', 'main')
+                return sectionEl
+            }
+        })
+
+        Fold.addComponent({
+            name: 'heading',
+            props: {
+                title: { type: 'string', default: "Heading" },
+            },
+            defaultStyle: {
+                heading: {
+
+                }
+            },
+            render: ({ props, helper }) => {
+                const headingEl = helper.el('h1', 'heading')
+                headingEl.innerText = props.title
+                return headingEl
+            }
+        })
 
         const schema2 = {
-            id: "b1",
-            type: 'button',
-            props: {
-                label: "Click Me",
-                icon: {
-                    content: plusIcon,
-                    position: "left",
-                }
-            },
+            id: 'main-1',
+            type: 'main',
             style: {
-                button: {
-                    // background: 'red'
-                },
-            },
-            responsive: {
-                mobile: {
-                    style: {
-                        button: {
-                            background: 'blue'
-                        }
-                    },
-                    prop: {
-                        icon: {
-                            position: "right"
-                        }
-                    }
+                main: {
+                    background: 'red',
                 }
-            }
+            },
+            children: [
+                {
+                    id: 'h1',
+                    type: 'heading',
+                    props: {
+                        title: "Foldui is amazing",
+                    },
+                    style: {
+                        fontSize: '30px',
+                    },
+                }
+            ]
         }
 
         const html = Fold.render(schema2)
