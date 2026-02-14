@@ -14,6 +14,8 @@ export const Button = defineComponent({
     defaultStyle: {
         button: {
             display: 'inline-flex',
+            alignItems: 'center',
+            background: 'black',
             padding: '8px 16px',
             fontSize: '18px',
             outline: 'none',
@@ -33,13 +35,16 @@ export const Button = defineComponent({
 
         const iconContent = props.icon?.content
 
+        console.log(iconContent)
+
         if (iconContent) {
             const tempEl = document.createElement('div')
             tempEl.innerHTML = iconContent
 
             const iconEl = tempEl.firstElementChild
-            if (iconEl instanceof HTMLElement) {
-                iconEl.dataset.part = 'icon'
+
+            if (iconEl instanceof Element) {
+                iconEl.setAttribute('data-part', 'icon')
 
                 if (props.icon.position === 'right') {
                     buttonEl.append(iconEl)
@@ -47,6 +52,7 @@ export const Button = defineComponent({
                     buttonEl.prepend(iconEl)
                 }
 
+                console.log('s', props.icon.spacing)
                 buttonEl.style.gap = props.icon.spacing
             }
         }
