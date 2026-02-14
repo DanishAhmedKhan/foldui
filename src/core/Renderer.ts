@@ -15,7 +15,7 @@ export class Renderer {
         const mergedProps = this.mergeResponsiveProps(node)
         const props = this.resolveProps(component, mergedProps)
 
-        const createEl = (tag: string, part?: string): HTMLElement => {
+        const createEl = <K extends keyof HTMLElementTagNameMap>(tag: K, part?: string): HTMLElementTagNameMap[K] => {
             const element = document.createElement(tag)
 
             if (part) {

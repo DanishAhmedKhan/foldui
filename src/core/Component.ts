@@ -14,6 +14,6 @@ export interface Component<PropSchema extends Record<string, FoldPropSchema> = R
     render(ctx: {
         id: string
         props: InferProps<PropSchema>
-        el: (tag: string, part?: string) => HTMLElement
+        el: <K extends keyof HTMLElementTagNameMap>(tag: K, part?: string) => HTMLElementTagNameMap[K]
     }): HTMLElement
 }
