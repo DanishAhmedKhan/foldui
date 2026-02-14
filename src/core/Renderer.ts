@@ -1,4 +1,5 @@
 import type { FoldNode } from '../types/FoldNode'
+import type { FoldPropsSchema } from '../types/FoldProp'
 import type { Component } from './Component'
 import type { ComponentRegistry } from './ComponentRegistry'
 
@@ -47,24 +48,34 @@ export class Renderer {
         return rootEl
     }
 
-    private resolveProps(component: Component, incomingProps?: Record<string, any>) {
-        const resolved: Record<string, any> = {}
+    private resolveProps(component: Component<any>, incomingProps: Record<string, any> = {}): Record<string, any> {
+        const schema = component.props
+        if (!schema) return incomingProps
 
-        if (!component.props) return incomingProps ?? {}
+        const resolve = (schemaObj: FoldPropsSchema, provided: Record<string, any> = {}): Record<string, any> => {
+            const result: Record<string, any> = {}
 
-        for (const key in component.props) {
-            const schema = component.props[key]
+            for (const key in schemaObj) {
+                const schemaValue = schemaObj[key]
+                const userValue = provided?.[key]
 
-            if (incomingProps?.[key] !== undefined) {
-                resolved[key] = incomingProps[key]
-            } else if (schema.default !== undefined) {
-                resolved[key] = schema.default
-            } else if (schema.required) {
-                throw new Error(`Missing required prop "${key}" on component "${component.name}"`)
+                if ('type' in schemaValue) {
+                    if (userValue !== undefined) {
+                        result[key] = userValue
+                    } else if ('default' in schemaValue) {
+                        result[key] = schemaValue.default
+                    } else {
+                        result[key] = undefined
+                    }
+                } else {
+                    result[key] = resolve(schemaValue as FoldPropsSchema, userValue || {})
+                }
             }
+
+            return result
         }
 
-        return resolved
+        return resolve(schema, incomingProps)
     }
 
     private mergeResponsiveProps(node: FoldNode) {
