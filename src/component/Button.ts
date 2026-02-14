@@ -31,20 +31,24 @@ export const Button = defineComponent({
         buttonEl.href = props.link
         buttonEl.innerText = props.text
 
-        let icon = props.icon?.content
-        if (icon) {
+        const iconContent = props.icon?.content
+
+        if (iconContent) {
             const tempEl = document.createElement('div')
-            tempEl.innerHTML = icon
-            icon = tempEl.firstChild
-            icon.dataset.part = 'icon'
+            tempEl.innerHTML = iconContent
 
-            if (props.icon.position === 'right') {
-                buttonEl.append(icon)
-            } else {
-                buttonEl.prepend(icon)
+            const iconEl = tempEl.firstElementChild
+            if (iconEl instanceof HTMLElement) {
+                iconEl.dataset.part = 'icon'
+
+                if (props.icon.position === 'right') {
+                    buttonEl.append(iconEl)
+                } else {
+                    buttonEl.prepend(iconEl)
+                }
+
+                buttonEl.style.gap = props.icon.spacing
             }
-
-            buttonEl.style.gap = props.icon.spacing
         }
 
         return buttonEl

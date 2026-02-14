@@ -5,3 +5,7 @@ export interface FoldPropSchema {
     required?: boolean
     default?: any
 }
+
+export type FoldPropsSchema = {
+    [key: string]: FoldPropSchema | FoldPropsSchema
+}
