@@ -25,7 +25,7 @@ export class FoldUI {
         return this
     }
 
-    public render(schema: FoldNode): HTMLElement {
+    public render(schema: FoldNode): HTMLElement | DocumentFragment {
         const renderer = new Renderer(this.registry)
         const rootEl = renderer.render(schema)
 

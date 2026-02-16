@@ -179,7 +179,51 @@
             ]
         }
 
-        const html = Fold.render(schema2)
+        const builderSchema = {
+            "id": "f16ba28b-416b-474e-93f3-935070263247",
+            "type": "fragment",
+            "props": {},
+            "style": {},
+            "responsive": {},
+            "children": [
+                {
+                    "id": "d04007bd-04ca-4848-9ea4-1895ee0fe680",
+                    "type": "container",
+                    "props": {},
+                    "style": {
+                        "container": {
+                            "maxWidth": "500px",
+                            "margin": "0 auto",
+                            "padding": "100px 0px"
+                        }
+                    },
+                    "responsive": {},
+                    "children": [
+                        {
+                            "id": "2fa034f6-7032-42b6-a1d2-8ce8b6bcfa10",
+                            "type": "text",
+                            "props": {
+                                "text": "FoldUI is amazing!"
+                            },
+                            "style": {},
+                            "responsive": {},
+                            "children": []
+                        },
+                        {
+                            "id": "cd9438cc-9217-4786-b7b4-6da1c7a08e72",
+                            "type": "button",
+                            "props": {},
+                            "style": {},
+                            "responsive": {},
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        }
+
+        const html = Fold.render(builderSchema)
+        // const html = Fold.render(schema2)
 
         const containerEl = document.getElementById('container')
         containerEl.appendChild(html)

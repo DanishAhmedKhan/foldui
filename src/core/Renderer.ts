@@ -6,7 +6,7 @@ import type { ComponentRegistry } from './ComponentRegistry'
 export class Renderer {
     constructor(private registry: ComponentRegistry) {}
 
-    public render(node: FoldNode): HTMLElement {
+    public render(node: FoldNode): HTMLElement | DocumentFragment {
         const component = this.registry.get(node.type)
 
         if (!component) {
@@ -24,9 +24,11 @@ export class Renderer {
             helper,
         })
 
-        rootEl.classList.add(`fui-${node.type}`)
-        rootEl.setAttribute('data-fui-id', node.id)
-        rootEl.setAttribute('data-fui-type', node.type)
+        if (rootEl instanceof HTMLElement) {
+            rootEl.classList.add(`fui-${node.type}`)
+            rootEl.setAttribute('data-fui-id', node.id)
+            rootEl.setAttribute('data-fui-type', node.type)
+        }
 
         if (node.children?.length) {
             for (const childNode of node.children) {
