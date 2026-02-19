@@ -3,11 +3,18 @@
     "version": "0.0.2",
     "type": "module",
     "description": "Schema-driven engine for building web UI",
-    "main": "./dist/foldui.js",
+    "author": "Danish Ahmed Khan",
+    "license": "MIT",
+    "main": "./dist/foldui.umd.cjs",
     "module": "./dist/foldui.js",
-    "unpkg": "./dist/foldui.umd.js",
-    "jsdelivr": "./dist/foldui.umd.js",
     "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/foldui.js",
+            "require": "./dist/foldui.umd.cjs"
+        }
+    },
     "files": [
         "dist"
     ],
@@ -24,7 +31,6 @@
         "ui-engine",
         "ui-renderer"
     ],
-    "author": "Danish Ahmed Khan",
     "homepage": "https://github.com/DanishAhmedKhan/foldui",
     "repository": {
         "type": "git",
@@ -33,7 +39,6 @@
     "bugs": {
         "url": "https://github.com/DanishAhmedKhan/rectflow/foldui"
     },
-    "license": "MIT",
     "devDependencies": {
         "typescript": "~5.9.3",
         "vite": "^7.2.4"
