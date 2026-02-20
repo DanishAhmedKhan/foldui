@@ -1,3 +1,5 @@
-export * from './core/FoldUI'
-export * from './core/Fold'
-export * from './core/NodeSpec'
+export { FoldUI } from './core/FoldUI'
+export { Fold } from './core/Fold'
+export type { FoldNode } from './types/FoldNode'
+export { NodeSpec } from './core/NodeSpec'
+export type { Component } from './core/Component'
