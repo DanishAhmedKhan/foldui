@@ -25,17 +25,16 @@ export class FoldUI {
         return this
     }
 
-    public render(schema: FoldNode): HTMLElement | DocumentFragment {
+    public render(schema: FoldNode, targetDocument: Document = document): HTMLElement | DocumentFragment {
         const renderer = new Renderer(this.registry)
         const rootEl = renderer.render(schema)
 
         const css = this.styleEngine.generate(schema)
-        console.log(css)
 
         if (css) {
-            const styleTag = document.createElement('style')
+            const styleTag = targetDocument.createElement('style')
             styleTag.textContent = css
-            document.head.appendChild(styleTag)
+            targetDocument.head.appendChild(styleTag)
         }
 
         return rootEl

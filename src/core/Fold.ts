@@ -9,7 +9,7 @@ export const Fold = {
         defaultFoldUI.addComponent(component)
     },
 
-    render(schema: FoldNode): HTMLElement | DocumentFragment {
-        return defaultFoldUI.render(schema)
+    render(schema: FoldNode, targetDocument: Document = document): HTMLElement | DocumentFragment {
+        return defaultFoldUI.render(schema, targetDocument)
     },
 }
