@@ -35,8 +35,6 @@ export const Button = defineComponent({
 
         const iconContent = props.icon?.content
 
-        console.log(iconContent)
-
         if (iconContent) {
             const tempEl = document.createElement('div')
             tempEl.innerHTML = iconContent
@@ -52,7 +50,6 @@ export const Button = defineComponent({
                     buttonEl.prepend(iconEl)
                 }
 
-                console.log('s', props.icon.spacing)
                 buttonEl.style.gap = props.icon.spacing
             }
         }

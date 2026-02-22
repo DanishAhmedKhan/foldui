@@ -32,7 +32,13 @@ export class FoldUI {
         const css = this.styleEngine.generate(schema)
 
         if (css) {
-            const styleTag = targetDocument.createElement('style')
+            const FOLD_STYLE_ID = '__fold_style__'
+
+            let styleTag = targetDocument.getElementById(FOLD_STYLE_ID)
+            if (!styleTag) {
+                styleTag = targetDocument.createElement('style')
+                styleTag.id = FOLD_STYLE_ID
+            }
             styleTag.textContent = css
             targetDocument.head.appendChild(styleTag)
         }
