@@ -5,9 +5,21 @@ export class StyleEngine {
         this.css = []
     }
 
-    public push(selector: string, style: Record<string, any>) {
+    public push(selector: string, style: Record<string, any>, media?: string | string[]) {
         if (!style || !Object.keys(style).length) return
-        this.css.push(`${selector} { ${this.styleToCss(style)} }`)
+
+        const rule = `${selector} { ${this.styleToCss(style)} }`
+
+        if (!media) {
+            this.css.push(rule)
+            return
+        }
+
+        const queries = Array.isArray(media) ? media : [media]
+
+        for (const query of queries) {
+            this.css.push(`@media ${query} { ${rule} }`)
+        }
     }
 
     public pushRaw(css: string) {

@@ -157,44 +157,45 @@
             }
         })
 
-        const schema2 = {
-            id: 'main-1',
-            type: 'main',
-            style: {
-                main: {
-                    background: 'red',
-                }
-            },
+        const builderSchema = {
+            type: "fragment",
             children: [
                 {
-                    id: 'h1',
-                    type: 'heading',
-                    props: {
-                        title: "Foldui is amazing",
-                    },
-                    style: {
-                        fontSize: '30px',
-                    },
-                }
-            ]
-        }
-
-        const builderSchema = {
-            "type": "fragment",
-            "children": [
-                {
-                    "type": "text",
-                    "props": {
-                        "content": "danish",
-                        "responsive": {
-                            "all": {
-                                text: {
-                                    color: 'red',
-                                }
+                    type: 'container',
+                    responsive: {
+                        all: {
+                            container: {
+                                padding: '100px 0px',
+                                maxWidth: 600,
+                                margin: '0 auto',
                             }
                         }
-                    }
-                }
+                    },
+                    children: [
+                        {
+                            type: "text",
+                            props: {
+                                content: "danish",
+                            },
+                            responsive: {
+                                all: {
+                                    text: {
+                                        color: 'red',
+                                        fontSize: 50,
+                                    }
+                                },
+                                'max-800': {
+                                    text: {
+                                        fontSize: 30,
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            type: 'button',
+                        }
+                    ]
+                },
             ]
         }
 
@@ -210,14 +211,11 @@
                     return null
                 }
 
-                const responsive = node.props?.responsive
+                const responsive = node?.responsive
                 if (!responsive || !styleEngine) return
 
-                for (const key in responsive) {
-                    const config = responsive[key]
-
-                    const mediaQuery = parseMediaKey(key)
-                    if (!mediaQuery) continue
+                for (const media in responsive) {
+                    const config = responsive[media]
 
                     for (const part in config) {
                         const styleObj = config[part]
@@ -225,12 +223,13 @@
 
                         const selector = `[data-fui-id="${node.id}"][data-part="${part}"]`
 
-                        if (part === 'all') {
-
+                        if (media === 'all') {
+                            styleEngine.push(selector, styleObj)
                         } else {
-                            styleEngine.pushRaw(
-                                `@media ${mediaQuery} { ${selector} { ${styleEngine.styleToCss(styleObj)} } }`
-                            )
+                            const mediaQuery = parseMediaKey(media)
+                            if (!mediaQuery) continue
+
+                            styleEngine.push(selector, styleObj, mediaQuery)
                         }
                     }
                 }

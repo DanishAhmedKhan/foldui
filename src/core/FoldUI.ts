@@ -42,6 +42,7 @@ export class FoldUI {
         const rootEl = renderer.render(schema)
 
         const css = this.styleEngine.toString()
+        console.log(css)
 
         if (css) {
             const FOLD_STYLE_ID = '__fold_style__'

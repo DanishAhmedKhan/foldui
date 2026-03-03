@@ -2,38 +2,12 @@ import { defineComponent } from './defineComponent'
 
 export const Button = defineComponent({
     name: 'button',
-    props: {
-        link: { type: 'string', default: '#' },
-        text: { type: 'string', default: 'Button' },
-        icon: {
-            content: { type: 'string', default: '' },
-            position: { type: 'string', default: 'right' },
-            spacing: { type: 'string', default: '10px' },
-        },
-    },
-    defaultStyle: {
-        button: {
-            display: 'inline-flex',
-            alignItems: 'center',
-            background: 'black',
-            padding: '8px 16px',
-            fontSize: '18px',
-            outline: 'none',
-            border: 'none',
-            color: 'white',
-            textDecoration: 'none',
-        },
-        icon: {
-            display: 'block',
-            fill: 'white',
-        },
-    },
-    render: ({ props, helper }) => {
+    render: ({ node, helper }) => {
         const buttonEl = helper.el('a', 'button')
-        buttonEl.href = props.link
-        buttonEl.innerText = props.text
+        buttonEl.href = node.props?.link
+        buttonEl.innerText = node.props?.text ?? 'Button'
 
-        const iconContent = props.icon?.content
+        const iconContent = node.props?.icon?.content
 
         if (iconContent) {
             const tempEl = document.createElement('div')
@@ -44,13 +18,13 @@ export const Button = defineComponent({
             if (iconEl instanceof Element) {
                 iconEl.setAttribute('data-part', 'icon')
 
-                if (props.icon.position === 'right') {
+                if (node.props?.icon.position === 'right') {
                     buttonEl.append(iconEl)
                 } else {
                     buttonEl.prepend(iconEl)
                 }
 
-                buttonEl.style.gap = props.icon.spacing
+                buttonEl.style.gap = node.props?.icon.spacing
             }
         }
 
