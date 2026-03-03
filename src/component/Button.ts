@@ -7,6 +7,13 @@ export const Button = defineComponent({
         buttonEl.href = node.props?.link
         buttonEl.innerText = node.props?.text ?? 'Button'
 
+        Object.assign(buttonEl.style, {
+            background: 'black',
+            padding: '10px 20px',
+            color: 'white',
+            textDecoration: 'none',
+        })
+
         const iconContent = node.props?.icon?.content
 
         if (iconContent) {
