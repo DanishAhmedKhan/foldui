@@ -1,3 +1,4 @@
+import type { FoldNode } from '../types/FoldNode'
 import type { FoldPropSchema, FoldPropsSchema } from '../types/FoldProp'
 
 type InferProps<Schema extends FoldPropsSchema> = {
@@ -10,12 +11,18 @@ type InferProps<Schema extends FoldPropsSchema> = {
         : never
 }
 
-export interface Component<PropSchema extends FoldPropsSchema = FoldPropsSchema> {
+// export interface Component<PropSchema extends FoldPropsSchema = FoldPropsSchema> {
+//     name: string
+
+//     props?: PropSchema
+
+//     defaultStyle?: Record<string, Record<string, any>>
+
+//     render(ctx: { id: string; props: InferProps<PropSchema>; helper: any }): HTMLElement | DocumentFragment
+// }
+
+export interface Component {
     name: string
 
-    props?: PropSchema
-
-    defaultStyle?: Record<string, Record<string, any>>
-
-    render(ctx: { id: string; props: InferProps<PropSchema>; helper: any }): HTMLElement | DocumentFragment
+    render(ctx: { node: FoldNode; helper: any }): HTMLElement | DocumentFragment
 }

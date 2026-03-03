@@ -181,57 +181,63 @@
 
         const builderSchema = {
             "type": "fragment",
-            "props": {},
-            "style": {},
-            "responsive": {},
             "children": [
                 {
-                    "type": "container",
-                    "props": {},
-                    "style": {
-                        "container": {
-                            "maxWidth": "500px",
-                            "margin": "0 auto",
-                            "padding": "100px 0px"
-                        }
-                    },
-                    "responsive": {},
-                    "children": [
-                        {
-                            "type": "text",
-                            "props": {
-                                "text": "FoldUI is amazing!!!!"
-                            },
-                            "style": {},
-                            "responsive": {},
-                            "children": []
-                        },
-                        {
-                            "type": "button",
-                            "props": {},
-                            "style": {},
-                            "responsive": {},
-                            "children": []
-                        },
-                        {
-                            id: 'asdasdashd-jashdjsd-jjrgfjna-sifefdjduvf-jkajdhabv-sjhdvas',
-                            "type": "button",
-                            "props": {},
-                            "style": {
-                                button: {
-                                    background: 'red',
+                    "type": "text",
+                    "props": {
+                        "content": "danish",
+                        "responsive": {
+                            "all": {
+                                text: {
+                                    color: 'red',
                                 }
-                            },
-                            "responsive": {},
-                            "children": []
+                            }
                         }
-                    ]
+                    }
                 }
             ]
         }
 
+        Fold.use({
+            beforeRender({ node, styleEngine }) {
+                const parseMediaKey = (key) => {
+                    const minMatch = key.match(/^min-(\d+)$/)
+                    if (minMatch) return `(min-width: ${minMatch[1]}px)`
+
+                    const maxMatch = key.match(/^max-(\d+)$/)
+                    if (maxMatch) return `(max-width: ${maxMatch[1]}px)`
+
+                    return null
+                }
+
+                const responsive = node.props?.responsive
+                if (!responsive || !styleEngine) return
+
+                for (const key in responsive) {
+                    const config = responsive[key]
+
+                    const mediaQuery = parseMediaKey(key)
+                    if (!mediaQuery) continue
+
+                    for (const part in config) {
+                        const styleObj = config[part]
+                        if (!styleObj) continue
+
+                        const selector = `[data-fui-id="${node.id}"][data-part="${part}"]`
+
+                        if (part === 'all') {
+
+                        } else {
+                            styleEngine.pushRaw(
+                                `@media ${mediaQuery} { ${selector} { ${styleEngine.styleToCss(styleObj)} } }`
+                            )
+                        }
+                    }
+                }
+            }
+        })
+
         const html = Fold.render(builderSchema)
-        // const html = Fold.render(schema2)
 
         const containerEl = document.getElementById('container')
         containerEl.appendChild(html)

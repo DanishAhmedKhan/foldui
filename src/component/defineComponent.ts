@@ -1,6 +1,5 @@
 import type { Component } from '../core/Component'
-import type { FoldPropsSchema } from '../types/FoldProp'
 
-export function defineComponent<Schema extends FoldPropsSchema>(component: Component<Schema>): Component<Schema> {
+export function defineComponent(component: Component): Component {
     return component
 }

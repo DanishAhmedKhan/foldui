@@ -2,20 +2,14 @@ import { defineComponent } from './defineComponent'
 
 export const Text = defineComponent({
     name: 'text',
-    props: {
-        tag: { type: 'string', default: 'span' },
-        text: { type: 'string', default: 'This is a text' },
-    },
-    defaultStyle: {
-        text: {
-            fontSize: '16px',
-            color: '#333',
-        },
-    },
-    render: ({ props, helper }) => {
-        const tag = props.tag
+
+    render: ({ node, helper }) => {
+        const tag = node.props?.tag ?? 'h1'
+        const content = node.props?.content ?? 'This is a text'
+
         const textEl = helper.el(tag, 'text')
-        textEl.textContent = props.text
+        textEl.textContent = content
+
         return textEl
     },
 })

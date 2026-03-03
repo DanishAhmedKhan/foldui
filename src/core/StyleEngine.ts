@@ -1,92 +1,25 @@
-import type { ComponentRegistry } from '../core/ComponentRegistry'
-import type { FoldNode } from '../types/FoldNode'
 export class StyleEngine {
     private css: string[] = []
-    private emittedComponents = new Set<string>()
 
-    constructor(private registry: ComponentRegistry, private breakpoints: Record<string, string> = {}) {}
-
-    public generate(root: FoldNode): string {
+    public reset() {
         this.css = []
-        this.emittedComponents.clear()
-
-        this.walk(root)
-
-        return this.css.join('\n')
     }
 
-    private walk(node: FoldNode) {
-        this.handleComponentDefaultStyle(node)
-        this.handleInstanceStyle(node)
-        this.handleResponsiveStyles(node)
-
-        if (node.children?.length) {
-            for (const child of node.children) {
-                this.walk(child)
-            }
-        }
-    }
-
-    private handleComponentDefaultStyle(node: FoldNode) {
-        const component = this.registry.get(node.type)
-        if (!component?.defaultStyle) return
-
-        if (this.emittedComponents.has(node.type)) return
-
-        for (const part in component.defaultStyle) {
-            const styleObj = component.defaultStyle[part]
-            if (!styleObj) continue
-
-            const selector = `.fui-${node.type} [data-part="${part}"], .fui-${node.type}[data-part="${part}"]`
-            this.pushRule(selector, styleObj)
-        }
-
-        this.emittedComponents.add(node.type)
-    }
-
-    private handleInstanceStyle(node: FoldNode) {
-        if (!node.style) return
-
-        for (const part in node.style) {
-            const styleObj = node.style[part]
-            if (!styleObj || !Object.keys(styleObj).length) continue
-
-            const selector = this.partSelector(node.id, part)
-            this.pushRule(selector, styleObj)
-        }
-    }
-
-    private partSelector(id: string, part: string) {
-        return `[data-fui-owner="${id}"][data-part="${part}"]`
-    }
-
-    private handleResponsiveStyles(node: FoldNode) {
-        if (!node.responsive) return
-
-        for (const bp in node.responsive) {
-            const config = node.responsive[bp]
-            if (!config?.style) continue
-
-            const mediaQuery = this.breakpoints[bp]
-            if (!mediaQuery) continue
-
-            for (const part in config.style) {
-                const styleObj = config.style[part]
-                if (!styleObj) continue
-
-                const selector = this.partSelector(node.id, part)
-
-                this.css.push(`@media ${mediaQuery} { ${selector} { ${this.styleToCss(styleObj)} } }`)
-            }
-        }
-    }
-
-    private pushRule(selector: string, style: Record<string, any>) {
-        if (!Object.keys(style).length) return
+    public push(selector: string, style: Record<string, any>) {
+        if (!style || !Object.keys(style).length) return
         this.css.push(`${selector} { ${this.styleToCss(style)} }`)
     }
 
-    private styleToCss(style: Record<string, any>): string {
+    public pushRaw(css: string) {
+        if (!css) return
+        this.css.push(css)
+    }
+
+    public toString(): string {
+        return this.css.join('\n')
+    }
+
+    public styleToCss(style: Record<string, any>): string {
         return Object.entries(style)
             .map(([key, value]) => {
                 if (value == null) return ''
