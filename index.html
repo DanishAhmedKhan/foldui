@@ -163,8 +163,8 @@
                 {
                     type: 'container',
                     responsive: {
-                        all: {
-                            container: {
+                        container: {
+                            base: {
                                 padding: '100px 0px',
                                 maxWidth: 600,
                                 margin: '0 auto',
@@ -178,14 +178,12 @@
                                 content: "danish",
                             },
                             responsive: {
-                                all: {
-                                    text: {
+                                text: {
+                                    base: {
                                         color: 'red',
                                         fontSize: 50,
-                                    }
-                                },
-                                'max-800': {
-                                    text: {
+                                    },
+                                    'max-500': {
                                         fontSize: 30,
                                     }
                                 }
@@ -214,16 +212,16 @@
                 const responsive = node?.responsive
                 if (!responsive || !styleEngine) return
 
-                for (const media in responsive) {
-                    const config = responsive[media]
+                for (const part in responsive) {
+                    const config = responsive[part]
 
-                    for (const part in config) {
-                        const styleObj = config[part]
+                    for (const media in config) {
+                        const styleObj = config[media]
                         if (!styleObj) continue
 
                         const selector = `[data-fui-id="${node.id}"][data-part="${part}"]`
 
-                        if (media === 'all') {
+                        if (media === 'base') {
                             styleEngine.push(selector, styleObj)
                         } else {
                             const mediaQuery = parseMediaKey(media)

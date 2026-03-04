@@ -1,6 +1,6 @@
 {
     "name": "foldui",
-    "version": "0.1.0",
+    "version": "0.0.2",
     "type": "module",
     "description": "Schema-driven rendering engine for building web UI",
     "author": "Danish Ahmed Khan",
